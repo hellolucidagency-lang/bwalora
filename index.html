@@ -634,5 +634,24 @@ document.addEventListener("input",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTrack();if(e.key==="Enter"&&e.target.id==="trkP")submitTrack()});
 </script>
+<script>
+  // 1. تغيير الصور المكتوبة في الصفحة أول ما تفتح
+  document.querySelectorAll('img').forEach(img => {
+    if (img.src && img.src.includes('res.cloudinary.com')) {
+      img.src = img.src.replace('res.cloudinary.com', 'images.bwalora.com');
+    }
+  });
+
+  // 2. مراقبة أي صورة جديدة تنزل على الصفحة بعد كده
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('img').forEach(img => {
+      if (img.src && img.src.includes('res.cloudinary.com')) {
+        img.src = img.src.replace('res.cloudinary.com', 'images.bwalora.com');
+      }
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+</script> 
 </body>
 </html>
