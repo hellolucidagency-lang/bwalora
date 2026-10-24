@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>لوحة تحليلات ألورا</title>
+<style>
+:root{--bg:#F1EDE5;--card:#fff;--ink:#302E2A;--mut:#82776A;--line:#DDD6C9;--soft:#E9E4D9;--bad:#a6574a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;font-size:14px}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:0}
+input,select{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:16px;min-width:0}
+.btn{background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-weight:600;font-size:13.5px}
+.btn.o{background:none;color:var(--ink);border:1px solid var(--mut)}.btn:disabled{opacity:.55;cursor:default}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.lbox{background:var(--card);border-radius:18px;padding:26px 22px;width:min(360px,100%);text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 8px 30px rgba(48,46,42,.08)}
+.lbox h1{font-size:18px;margin:0}.lbox p{margin:0;color:var(--mut);font-size:13px}.err{color:var(--bad);font-size:13px;min-height:18px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header h1{font-size:16px;margin:0;flex:1;min-width:150px}header small{color:var(--mut)}
+main{max-width:1280px;margin:0 auto;padding:14px}
+.note{background:#f6efe0;border:1px solid #e3d5b4;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:12.5px;line-height:1.8}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filters .grow{flex:1 1 200px}.filters label{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:3px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border-radius:14px;padding:13px 14px;border:1px solid var(--line)}
+.kpi span{display:block;font-size:12px;color:var(--mut);margin-bottom:6px}.kpi b{font-size:22px;line-height:1.25;word-break:break-word}.kpi small{display:block;color:var(--mut);font-size:11px;margin-top:3px}
+.kpi b.t{font-size:15px}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px;margin-bottom:16px}
+.ch{background:var(--card);border-radius:14px;padding:12px;border:1px solid var(--line)}
+.ch h3{margin:0 0 8px;font-size:13.5px}.ch.w{grid-column:1/-1}.cv{position:relative;height:250px}.ch.w .cv{height:280px}
+.tw{background:var(--card);border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.tbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--line)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{background:var(--soft);text-align:start;padding:9px 10px;white-space:nowrap;position:sticky;top:0}
+td{padding:8px 10px;border-top:1px solid var(--line);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:hover td{background:#faf8f3}.pg{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;flex-wrap:wrap}
+.empty{padding:30px;text-align:center;color:var(--mut)}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <form class="lbox" id="lf" autocomplete="off">
+    <h1>🔒 لوحة تحليلات ألورا</h1>
+    <p>اكتبي كلمة السر للدخول</p>
+    <input type="password" id="pw" placeholder="كلمة السر" autocomplete="current-password" required>
+    <div class="err" id="lerr" role="alert"></div>
+    <button class="btn" id="lgo" type="submit">دخول</button>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <h1>📊 لوحة تحليلات ألورا <small id="upd"></small></h1>
+    <label style="font-size:12px;color:var(--mut)">تحميل
+      <select id="range"><option value="0">كل البيانات</option><option value="30">آخر 30 يوم</option><option value="90">آخر 90 يوم</option></select>
+    </label>
+    <button class="btn" id="refresh" type="button">🔄 تحديث</button>
+    <button class="btn o" id="logout" type="button">خروج</button>
+  </header>
+  <main>
+    <div class="note" id="note" hidden></div>
+    <div class="filters">
+      <label>من تاريخ<input type="date" id="fFrom"></label>
+      <label>إلى تاريخ<input type="date" id="fTo"></label>
+      <label>المدينة<select id="fCity"><option value="">الكل</option></select></label>
+      <button class="btn o" id="fReset" type="button" style="align-self:flex-end">إعادة ضبط</button>
+    </div>
+    <section class="cards" id="cards"></section>
+    <section class="charts">
+      <div class="ch w"><h3>زيارات الأيام</h3><div class="cv"><canvas id="cTrend"></canvas></div></div>
+      <div class="ch"><h3>أنواع الأحداث <small style="color:var(--mut)">(اضغطي على نوع لتصفية الجدول)</small></h3><div class="cv"><canvas id="cEvents"></canvas></div></div>
+      <div class="ch"><h3>أنواع الأجهزة</h3><div class="cv"><canvas id="cDev"></canvas></div></div>
+      <div class="ch"><h3>أعلى المدن والمحافظات</h3><div class="cv"><canvas id="cCity"></canvas></div></div>
+      <div class="ch"><h3>أعلى المنتجات تفاعلاً</h3><div class="cv"><canvas id="cProd"></canvas></div></div>
+    </section>
+    <section class="tw">
+      <div class="tbar">
+        <input class="grow" id="fQ" type="search" placeholder="🔎 بحث في كل الأعمدة..." style="flex:1 1 220px">
+        <select id="fEvent"><option value="">كل الأحداث</option></select>
+        <select id="perPage"><option>25</option><option>50</option><option>100</option></select>
+        <button class="btn" id="csv" type="button">⬇️ تصدير CSV</button>
+      </div>
+      <div class="scroll"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+      <div class="pg"><button class="btn o" id="prev" type="button">السابق</button><span id="pinfo"></span><button class="btn o" id="next" type="button">التالي</button></div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ================= الإعدادات: ضعي رابط Web App هنا ================= */
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwArQiYNLk2xJvQdAMCC_AstiwRbZPvLxducpoAgqiTwTbemtUVQp_ql8mIWBcUQo8/exec";   // الرابط الذي ينتهي بـ /exec من Google Apps Script
+const TZ = "Africa/Cairo";                      // المنطقة الزمنية لعرض التواريخ
+/* =================================================================== */
+
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const DAY = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" });
+const TIME = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
+const fmtT = t => { if (!t) return ""; const p = Object.fromEntries(TIME.formatToParts(t).map(x => [x.type, x.value])); const h = Number(p.hour) % 24; return `${p.day}-${p.month}-${p.year} | ${String(h % 12 || 12).padStart(2, "0")}:${p.minute} ${h >= 12 ? "م" : "ص"}`; };
+const PALETTE = ["#302E2A", "#82776A", "#B8AD9E", "#6b6256", "#D9D1C3", "#a39786", "#4a463f", "#c9bfae", "#8c7f6e", "#e6dfd2"];
+
+let KEY = "", COLS = [], ROWS = [], BASE = [], FILT = [], page = 1, CH = {};
+
+/* ---------- تسجيل الدخول: الكلمة تُرسل للسكربت ويتحقق منها هناك ---------- */
+$("#lf").addEventListener("submit", e => { e.preventDefault(); KEY = $("#pw").value; load(true); });
+$("#logout").onclick = () => { sessionStorage.removeItem("alora_dash_key"); location.reload(); };
+if (sessionStorage.getItem("alora_dash_key")) { KEY = sessionStorage.getItem("alora_dash_key"); load(true); }
+
+/* ---------- جلب البيانات (GET) مع JSONP احتياطي ---------- */
+function jsonp(url) {
+  return new Promise((res, rej) => {
+    const cb = "__alora_" + Date.now(), s = document.createElement("script");
+    const done = () => { clearTimeout(t); delete window[cb]; s.remove(); };
+    const t = setTimeout(() => { done(); rej(new Error("timeout")); }, 40000);
+    window[cb] = d => { done(); res(d); };
+    s.onerror = () => { done(); rej(new Error("network")); };
+    s.src = url + "&callback=" + cb; document.head.appendChild(s);
+  });
+}
+async function fetchData() {
+  if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(WEB_APP_URL)) throw new Error("ضعي رابط Web App الصحيح في أعلى كود الصفحة (WEB_APP_URL).");
+  const url = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(KEY) + "&days=" + $("#range").value;
+  try { const r = await fetch(url); return await r.json(); } catch (e) { return await jsonp(url); }
+}
+async function load(first) {
+  const b = $("#refresh"), g = $("#lgo"); b.disabled = g.disabled = true; $("#lerr").textContent = "";
+  try {
+    const d = await fetchData();
+    if (!d.ok) throw new Error(d.error === "unauthorized" ? "كلمة السر غير صحيحة." : (d.error || "تعذّر جلب البيانات"));
+    sessionStorage.setItem("alora_dash_key", KEY);
+    prep(d); $("#login").hidden = true; $("#app").hidden = false;
+    $("#upd").textContent = "آخر تحديث: " + fmtT(Date.now());
+    fillFilters(); render();
+  } catch (err) {
+    console.error(err);
+    if (first) { sessionStorage.removeItem("alora_dash_key"); $("#login").hidden = false; $("#app").hidden = true; $("#lerr").textContent = err.message === "network" || err.message === "timeout" ? "تعذّر الاتصال بالسكربت، تأكدي من الرابط والنشر." : err.message; }
+    else alert("تعذّر التحديث: " + err.message);
+  } finally { b.disabled = g.disabled = false; }
+}
+$("#refresh").onclick = () => load(false);
+$("#range").onchange = () => load(false);
+
+/* ---------- تجهيز الصفوف وإضافة حقول مشتقة (تبدأ بـ _) ---------- */
+const normPhone = v => { let d = String(v ?? "").replace(/[٠-٩]/g, x => "٠١٢٣٤٥٦٧٨٩".indexOf(x)).replace(/\D/g, ""); if (!d) return ""; if (d.length === 12 && d.startsWith("20")) d = "0" + d.slice(2); else if (d.length === 10 && d[0] === "1") d = "0" + d; return d; };
+function prep(d) {
+  COLS = d.columns || [];
+  $("#note").hidden = !(d.missing && d.missing.length);
+  if (d.missing && d.missing.length) $("#note").innerHTML = "⚠️ أعمدة غير موجودة في الشيت حالياً: <b>" + d.missing.map(esc).join("، ") + "</b>. لوحة التحكم تعرض كل الأعمدة الموجودة فقط. لإضافتها اكتبي عناوينها في الصف الأول من التبويب وأضيفي الحقول المقابلة في نود Google Sheets في n8n.";
+  ROWS = (d.rows || []).map(a => {
+    const o = {}; COLS.forEach((c, i) => o[c] = a[i] ?? "");
+    const t = Date.parse(o.timestamp); o._t = isNaN(t) ? 0 : t; o._day = o._t ? DAY.format(o._t) : "";
+    const parts = String(o.country_city || "").trim().split(/\s*[-–—,]\s*/).filter(Boolean); o._city = parts.length ? parts[parts.length - 1] : "غير معروف";
+    const dv = (String(o.device_type || "") + " " + String(o.user_agent || "")).toLowerCase();
+    o._dev = /tablet|ipad/.test(dv) ? "تابلت" : /mobile|android|iphone/.test(dv) ? "موبايل" : /desktop|windows|macintosh|linux|x11/.test(dv) ? "ديسكتوب" : "غير محدد";
+    o._phone = normPhone(o.user_contact);
+    o._sid = String(o.session_id || "") || (o.user_ip ? o.user_ip + "|" + o._dev : "");
+    o._s = (a.join(" ") + " " + o._phone).toLowerCase();
+    return o;
+  }).sort((x, y) => y._t - x._t);
+}
+function fillFilters() {
+  const keep = { c: $("#fCity").value, e: $("#fEvent").value };
+  const opt = (arr, all) => `<option value="">${all}</option>` + arr.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
+  $("#fCity").innerHTML = opt([...new Set(ROWS.map(r => r._city))].sort(), "الكل");
+  $("#fEvent").innerHTML = opt([...new Set(ROWS.map(r => r.event_name).filter(Boolean))].sort(), "كل الأحداث");
+  $("#fCity").value = keep.c; $("#fEvent").value = keep.e;
+}
+
+/* ---------- الفلترة: التاريخ والمدينة للكروت والرسوم، والحدث والبحث للجدول ---------- */
+function applyFilters() {
+  const f = $("#fFrom").value, t = $("#fTo").value, c = $("#fCity").value, e = $("#fEvent").value, q = $("#fQ").value.trim().toLowerCase();
+  BASE = ROWS.filter(r => (!f || (r._day && r._day >= f)) && (!t || (r._day && r._day <= t)) && (!c || r._city === c));
+  FILT = BASE.filter(r => (!e || r.event_name === e) && (!q || r._s.includes(q)));
+}
+function render() { applyFilters(); cards(); charts(); table(); }
+["fFrom", "fTo", "fCity"].forEach(id => $("#" + id).onchange = () => { page = 1; render(); });
+$("#fEvent").onchange = () => { page = 1; applyFilters(); table(); };
+let qt; $("#fQ").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { page = 1; applyFilters(); table(); }, 200); };
+$("#perPage").onchange = () => { page = 1; table(); };
+$("#fReset").onclick = () => { ["fFrom", "fTo", "fCity", "fEvent", "fQ"].forEach(id => $("#" + id).value = ""); page = 1; render(); };
+
+/* ---------- الحسابات ---------- */
+const tally = (arr, key) => { const m = new Map(); arr.forEach(r => { const k = typeof key === "function" ? key(r) : r[key]; if (k !== "" && k != null) m.set(k, (m.get(k) || 0) + 1); }); return [...m.entries()].sort((a, b) => b[1] - a[1]); };
+function cards() {
+  const L = BASE, pv = L.filter(r => r.event_name === "PageView"), hasSid = L.some(r => r.session_id);
+  const visits = pv.length || L.length;
+  const sess = new Set(L.map(r => r._sid).filter(Boolean)).size;
+  const ic = L.filter(r => r.event_name === "InitiateCheckout"), icU = new Set(ic.map((r, i) => r._sid || ("r" + i))).size;
+  const pur = L.filter(r => r.event_name === "Purchase").length, atc = L.filter(r => r.event_name === "AddToCart").length;
+  const phones = new Set(L.map(r => r._phone).filter(Boolean)).size;
+  const tc = tally(L.filter(r => r._city !== "غير معروف"), "_city")[0];
+  const views = L.filter(r => r.event_name === "ViewContent" && r.product_name);
+  const tp = tally(views.length ? views : L.filter(r => r.product_name && !String(r.product_name).includes(" | ")), "product_name")[0];
+  const K = (l, v, s, t) => `<div class="kpi"><span>${l}</span><b class="${t ? "t" : ""}">${esc(v)}</b>${s ? `<small>${esc(s)}</small>` : ""}</div>`;
+  $("#cards").innerHTML =
+    K("إجمالي الزيارات", visits.toLocaleString("en"), pv.length ? "أحداث PageView" : "كل الأحداث (لا يوجد PageView)") +
+    K("الزوار الفريدون", sess.toLocaleString("en"), hasSid ? "حسب session_id" : "تقديري (IP + الجهاز)") +
+    K("بدء إتمام الطلب", icU.toLocaleString("en"), `إجمالي الأحداث: ${ic.length}`) +
+    K("عمليات الشراء", pur.toLocaleString("en"), `إضافات للسلة: ${atc}`) +
+    K("أرقام التواصل الملتقطة", phones.toLocaleString("en"), "أرقام فريدة") +
+    K("أعلى مدينة", tc ? tc[0] : "—", tc ? tc[1] + " حدث" : "", 1) +
+    K("المنتج الأكثر مشاهدة", tp ? tp[0] : "—", tp ? tp[1] + " مشاهدة" : "", 1);
+}
+function mk(id, type, labels, datasets, opt) {
+  if (CH[id]) CH[id].destroy();
+  if (typeof Chart === "undefined") { $("#" + id).parentElement.innerHTML = "<div class='empty'>تعذّر تحميل مكتبة الرسوم (Chart.js).</div>"; return; }
+  CH[id] = new Chart($("#" + id), { type, data: { labels, datasets }, options: Object.assign({ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: type === "doughnut" || datasets.length > 1, position: "bottom" } } }, opt || {}) });
+}
+function charts() {
+  const L = BASE;
+  // 1) الاتجاه اليومي (مع ملء الأيام الفاضية)
+  const vis = new Map(), all = new Map(), days = L.map(r => r._day).filter(Boolean).sort();
+  L.forEach(r => { if (!r._day) return; all.set(r._day, (all.get(r._day) || 0) + 1); if (r.event_name === "PageView") vis.set(r._day, (vis.get(r._day) || 0) + 1); });
+  const lab = []; if (days.length) { for (let d = new Date(days[0] + "T00:00:00Z"), e = new Date(days[days.length - 1] + "T00:00:00Z"), n = 0; d <= e && n < 400; d.setUTCDate(d.getUTCDate() + 1), n++) lab.push(d.toISOString().slice(0, 10)); }
+  mk("cTrend", "line", lab, [
+    { label: "الزيارات (PageView)", data: lab.map(d => vis.get(d) || 0), borderColor: PALETTE[0], backgroundColor: PALETTE[0], tension: .3 },
+    { label: "كل الأحداث", data: lab.map(d => all.get(d) || 0), borderColor: PALETTE[2], backgroundColor: PALETTE[2], tension: .3 }]);
+  // 2) أنواع الأحداث (الضغط يصفّي الجدول)
+  const ev = tally(L, "event_name");
+  mk("cEvents", "doughnut", ev.map(x => x[0]), [{ data: ev.map(x => x[1]), backgroundColor: PALETTE }], { onClick: (e, els) => { if (els.length) { $("#fEvent").value = ev[els[0].index][0]; page = 1; applyFilters(); table(); $("#tbody").scrollIntoView({ behavior: "smooth" }); } } });
+  // 3) الأجهزة
+  const dv = tally(L, "_dev"); mk("cDev", "doughnut", dv.map(x => x[0]), [{ data: dv.map(x => x[1]), backgroundColor: PALETTE }]);
+  // 4) المدن
+  const ct = tally(L, "_city").slice(0, 10); mk("cCity", "bar", ct.map(x => x[0]), [{ label: "عدد الأحداث", data: ct.map(x => x[1]), backgroundColor: PALETTE[1] }], { indexAxis: "y" });
+  // 5) أعلى المنتجات تفاعلاً (مشاهدة + إضافة للسلة + قلب)
+  const pr = tally(L.filter(r => ["ViewContent", "AddToCart", "Wishlist_Love"].includes(r.event_name) && r.product_name), "product_name").slice(0, 10);
+  mk("cProd", "bar", pr.map(x => x[0]), [{ label: "عدد التفاعلات", data: pr.map(x => x[1]), backgroundColor: PALETTE[0] }], { indexAxis: "y" });
+}
+
+/* ---------- الجدول الشامل (كل الأعمدة) + الصفحات ---------- */
+function cell(r, c) { const v = r[c]; if (c === "timestamp") return fmtT(r._t) || v; if (c === "user_contact") return r._phone || v; return v; }
+function table() {
+  const pp = Number($("#perPage").value) || 25, pages = Math.max(1, Math.ceil(FILT.length / pp)); page = Math.min(page, pages);
+  $("#thead").innerHTML = "<tr><th>#</th>" + COLS.map(c => `<th>${esc(c)}</th>`).join("") + "</tr>";
+  const slice = FILT.slice((page - 1) * pp, page * pp);
+  $("#tbody").innerHTML = slice.length ? slice.map((r, i) => `<tr><td>${(page - 1) * pp + i + 1}</td>` + COLS.map(c => `<td title="${esc(r[c])}">${esc(cell(r, c))}</td>`).join("") + "</tr>").join("") : `<tr><td colspan="${COLS.length + 1}" class="empty">لا توجد بيانات مطابقة.</td></tr>`;
+  $("#pinfo").textContent = `صفحة ${page} من ${pages} — ${FILT.length.toLocaleString("en")} سجل`;
+  $("#prev").disabled = page <= 1; $("#next").disabled = page >= pages;
+}
+$("#prev").onclick = () => { page--; table(); };
+$("#next").onclick = () => { page++; table(); };
+
+/* ---------- تصدير CSV للبيانات المفلترة (كل الأعمدة) ---------- */
+$("#csv").onclick = () => {
+  const q = v => { let s = String(v ?? ""); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""').replace(/\r?\n/g, " ") + '"'; };   // حماية من حقن المعادلات
+  const csv = "\ufeff" + [COLS.map(q).join(",")].concat(FILT.map(r => COLS.map(c => q(r[c])).join(","))).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+  a.download = "alora-analytics-" + DAY.format(Date.now()) + ".csv"; document.body.appendChild(a); a.click(); a.remove();
+};
+</script>
+</body>
+</html>
