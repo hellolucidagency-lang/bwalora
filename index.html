@@ -11,7 +11,7 @@ gtag('js',new Date());gtag('config','GT-KT54SJNK');
 <!-- Meta Pixel - once -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','788558267315755');fbq('track','PageView');
+fbq('init','788558267315755');window.__pvid='pv'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);fbq('track','PageView',{},{eventID:window.__pvid});
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://n8n.hellolucidagency.com" crossorigin>
@@ -95,6 +95,7 @@ section{padding-top:24px}
 .tmsg{font-size:13px;min-height:20px;line-height:1.7}.tmsg.ok{color:#5f564b;font-weight:600}.tmsg.er{color:#a4372b}
 @media(max-width:900px){input,select,textarea{font-size:16px!important}}
 .in.bad{border-color:#d9b3a6}
+.cpm{font-size:12px;margin:-4px 0 8px;color:#5f564b}.cpm.er{color:#a6574a}
 .hr{display:flex;gap:6px;align-items:flex-start;justify-content:space-between}.hr h3{flex:1}.fav{width:28px;height:28px;flex:none;border-radius:50%;background:none;display:grid;place-items:center;color:var(--ink)} .fav svg{width:19px;height:19px}.fav.on{color:var(--ink)}.reel .fav{color:#fff}.sku{font-size:12px;color:var(--mut);letter-spacing:.5px;margin-top:-6px}.big.wab{background:#E4DED2;color:#82776A;border:1px solid #D6CEBF}
 .add{width:100%;margin-top:auto;background:var(--ink);color:#fff;padding:8px;border-radius:20px;font-size:12.5px;font-weight:700}
 .add:disabled{background:#d8d4cb;color:#6b675e;cursor:not-allowed}
@@ -421,7 +422,7 @@ const isSet=p=>/set|طقم|أطقم|اطقم/i.test(String(p.cat||""));
 const needSize=p=>p.sizes.length>1&&(isRing(p)||(isSet(p)&&p.sizes.every(x=>/^\d{2}$/.test(x))));   // خواتم، أو أطقم مقاساتها أرقام
 const shipFor=(row,t)=>{if(!row)return null;const f=num(row.free||row.Free_Above),c=num(row.cost||row.Shipping_Cost);return(f&&t>=f)?0:c};
 
-function track(ev,d={}){try{const v=d.value??(d.price?eff(d):0),ids=d.ids||[d.id],C="EGP",FB={ViewContent:"ViewContent",AddToCart:"AddToCart",Lead:"Lead",Checkout:"InitiateCheckout",Purchase:"Purchase"}[ev];if(window.fbq&&FB)fbq("track",FB,ev==="Checkout"?{value:v,num_items:d.n,currency:C}:{content_ids:ids,content_name:d.name,content_type:"product",value:v,currency:C});if(window.gtag){const it=d.name?[{item_id:ids[0],item_name:d.name,price:v}]:undefined,G={ViewContent:"view_item",AddToCart:"add_to_cart",Lead:"generate_lead",Checkout:"begin_checkout"}[ev];if(G)gtag("event",G,{currency:C,value:v,items:it});if(ev==="Purchase"){gtag("event","generate_lead",{currency:C,value:v});gtag("event","purchase",{transaction_id:"WA-"+Date.now(),currency:C,value:v})}}}catch(e){}}
+function track(ev,d={}){try{const v=d.value??(d.price?eff(d):0),ids=d.ids||[d.id],C="EGP",FB={ViewContent:"ViewContent",AddToCart:"AddToCart",Lead:"Lead",Checkout:"InitiateCheckout",Purchase:"Purchase"}[ev],EID="e"+Date.now().toString(36)+Math.random().toString(36).slice(2,8);if(window.fbq&&FB)fbq("track",FB,ev==="Checkout"?{value:v,num_items:d.n,currency:C}:{content_ids:ids,content_name:d.name,content_type:"product",value:v,currency:C},{eventID:EID});if(window.anSend&&FB&&FB!=="Lead")anSend(FB,{event_id:EID,product_name:d.name||"",product_id:ids[0]||"",content_ids:ids,value:v,num_items:d.n,user_contact:d.contact||"",discount_code:d.discount||""});if(window.gtag){const it=d.name?[{item_id:ids[0],item_name:d.name,price:v}]:undefined,G={ViewContent:"view_item",AddToCart:"add_to_cart",Lead:"generate_lead",Checkout:"begin_checkout"}[ev];if(G)gtag("event",G,{currency:C,value:v,items:it});if(ev==="Purchase"){gtag("event","generate_lead",{currency:C,value:v});gtag("event","purchase",{transaction_id:"WA-"+Date.now(),currency:C,value:v})}}}catch(e){}}
 
 function waNum(){
   let rawVal = sv("Store_Phone_WhatsApp") || CFG.WA || "1110737888";
@@ -433,6 +434,7 @@ function waNum(){
 }
 const localNum=()=>{const n=waNum();return n.startsWith("20")?"0"+n.slice(2):n};
 let PAY="cod";
+let DISC=ls.get("alora_disc",null);   // الخصم المطبّق حالياً: {code, percent}
 function copyTxt(txt,btn){const ok=()=>{if(btn){const o=btn.textContent;btn.textContent=LANG==="en"?"Copied ✓":"تم النسخ ✓";setTimeout(()=>btn.textContent=o,1600)}};if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(ok,()=>{})}else{const t=document.createElement("textarea");t.value=txt;t.style.cssText="position:fixed;opacity:0";document.body.appendChild(t);t.select();try{document.execCommand("copy");ok()}catch(e){}t.remove()}}
 const href=v=>!v?"#":/^https?:\/\//i.test(v)?https(v):"https://"+v.replace(/^\/+/,"");
 
@@ -451,7 +453,7 @@ function renderReels(){let L=P.filter(p=>p.best).sort((a,b)=>(b.ts-a.ts)||(b.ord
 function renderCols(){$("#colGrid").innerHTML=COLS.map(c=>`<button class="col" data-coll="${c.k}">${img(fixImg(sv(c.key))||c.fb,400,'alt=""')}<span>${LANG==="en"?c.en:c.ar}</span></button>`).join("")}
 function renderChips(){const cats=[ALL,...new Set(P.map(p=>p.cat).filter(Boolean))];$("#chips").innerHTML=cats.map(c=>`<button class="chip ${c===cat&&!wishOnly?"on":""}" data-cat="${esc(c)}">${c===ALL?T("all"):esc(c)}</button>`).join("")}
 function renderGrid(){const L=P.filter(p=>{if(wishOnly)return wish.includes(p.id);if(cat!==ALL&&p.cat!==cat)return false;if(collRe&&!collRe.test(p.cat))return false;return!term||norm(p.name+p.cat+p.desc+p.id+" "+(p.code||"")).includes(norm(term))});$("#grid").innerHTML=L.length?L.map(p=>cardHTML(p,"card")).join(""):`<div class="empty">${wishOnly?T("emptyWish"):T("emptyCat")}</div>`;const wc=$("#wc");wc.textContent=wish.length;wc.hidden=!wish.length}
-function renderAll(){applyHead();applyLang();renderFooter();renderReels();renderCols();renderChips();renderGrid();renderCart()}
+function renderAll(){try{window.anSchema&&anSchema()}catch(e){}applyHead();applyLang();renderFooter();renderReels();renderCols();renderChips();renderGrid();renderCart()}
 
 const saveCart=()=>ls.set("alora_cart",cart);
 const cartTotal=()=>cart.reduce((s,i)=>{const p=byId(i.id);return s+(p?eff(p)*i.q:0)},0);
@@ -459,13 +461,13 @@ const cartTotal=()=>cart.reduce((s,i)=>{const p=byId(i.id);return s+(p?eff(p)*i.
 function handleAddToCartDirect(id){const p=byId(id);if(!p||p.stock==='out_of_stock')return;if(needSize(p)){openProduct(id)}else{addToCart(id,"")}}
 function addToCart(id,size){const p=byId(id);if(!p||p.stock==='out_of_stock')return false;if(needSize(p)&&!size)return false;const it=cart.find(i=>i.id===id&&(i.size||"")===(size||""));it?it.q++:cart.push({id,q:1,size:size||"",sku:size?`${id}-${size}`:id});saveCart();track("AddToCart",p);renderCart();toast(T("toastAdd"));return true}
 
-function renderCart(){if(!P.length)return;cart=cart.filter(i=>byId(i.id));const n=cart.reduce((s,i)=>s+i.q,0),cc=$("#cc");cc.textContent=n;cc.hidden=!n;if(!cart.length){$("#cartBody").innerHTML=`<p class="empty" style="padding:50px 0">${T("emptyCart")}</p>`;$("#cartFoot").innerHTML="";return}const gov=ls.get("alora_gov",""),row=govRow(gov),th=row?num(row.free||row.Free_Above):0,t=cartTotal(),bar=th?`<div class="ship">${t<th?T("shipLeft",money(th-t)):T("shipOk")}<div class="track"><i style="width:${Math.min(100,t/th*100)}%"></i></div></div>`:"";$("#cartBody").innerHTML=bar+cart.map((i,idx)=>{const p=byId(i.id),mImg=p.imgs[0]||PH;return`<div class="ci">${img(mImg,160,'alt=""')}<div class="t"><b>${esc(p.name)}</b>${i.size?` <small>(${esc(i.size)})</small>`:""}<div>${money(eff(p))}</div><div class="qty"><button data-q="${idx}:-1">−</button><span>${i.q}</span><button data-q="${idx}:1">+</button></div><button class="rm" data-rm="${idx}">${T("rm")}</button></div></div>`}).join("");const s=ls.get("alora_cust",{}),sc=shipFor(row,t),grand=sc===null?t:t+sc,govSel=SHIP.length?`<select class="in" id="gov"><option value="">${T("govPick")}</option>${SHIP.map(x=>{const gName=gOf(x);return`<option value="${esc(gName)}" ${gName===gov?"selected":""}>${esc(gName)}</option>`}).join("")}</select>`:"",daysVal=row?(row.days||row.Delivery_Days||3):3,shipLine=SHIP.length?`<div class="ship">${row?`${sc===0?T("shipFree"):T("shipCost",money(sc))} · ${T("delivery",esc(daysVal))}`:T("govAsk")}</div>${row&&num(row.free||row.Free_Above)?`<div class="ship">${T("freeNote",num(row.free||row.Free_Above))}</div>`:""}`:"";
+function renderCart(){if(!P.length)return;cart=cart.filter(i=>byId(i.id));const n=cart.reduce((s,i)=>s+i.q,0),cc=$("#cc");cc.textContent=n;cc.hidden=!n;if(!cart.length){$("#cartBody").innerHTML=`<p class="empty" style="padding:50px 0">${T("emptyCart")}</p>`;$("#cartFoot").innerHTML="";return}const gov=ls.get("alora_gov",""),row=govRow(gov),th=row?num(row.free||row.Free_Above):0,t=cartTotal(),bar=th?`<div class="ship">${t<th?T("shipLeft",money(th-t)):T("shipOk")}<div class="track"><i style="width:${Math.min(100,t/th*100)}%"></i></div></div>`:"";$("#cartBody").innerHTML=bar+cart.map((i,idx)=>{const p=byId(i.id),mImg=p.imgs[0]||PH;return`<div class="ci">${img(mImg,160,'alt=""')}<div class="t"><b>${esc(p.name)}</b>${i.size?` <small>(${esc(i.size)})</small>`:""}<div>${money(eff(p))}</div><div class="qty"><button data-q="${idx}:-1">−</button><span>${i.q}</span><button data-q="${idx}:1">+</button></div><button class="rm" data-rm="${idx}">${T("rm")}</button></div></div>`}).join("");const s=ls.get("alora_cust",{}),sc=shipFor(row,t),da=DISC?Math.round(t*DISC.percent/100):0,grand=(sc===null?t:t+sc)-da,govSel=SHIP.length?`<select class="in" id="gov"><option value="">${T("govPick")}</option>${SHIP.map(x=>{const gName=gOf(x);return`<option value="${esc(gName)}" ${gName===gov?"selected":""}>${esc(gName)}</option>`}).join("")}</select>`:"",daysVal=row?(row.days||row.Delivery_Days||3):3,shipLine=SHIP.length?`<div class="ship">${row?`${sc===0?T("shipFree"):T("shipCost",money(sc))} · ${T("delivery",esc(daysVal))}`:T("govAsk")}</div>${row&&num(row.free||row.Free_Above)?`<div class="ship">${T("freeNote",num(row.free||row.Free_Above))}</div>`:""}`:"";
 
 const paySel = `<select class="in" id="payMethod"><option value="cod" ${PAY==="cod"?"selected":""}>${LANG==="en"?"Cash on delivery":"الدفع عند الاستلام (كاش)"}</option><option value="instapay" ${PAY==="instapay"?"selected":""}>${LANG==="en"?"InstaPay":"InstaPay (انستا باي)"}</option><option value="wallet" ${PAY==="wallet"?"selected":""}>${LANG==="en"?"Vodafone Cash wallet":"محفظة فودافون كاش"}</option></select>
 <div id="instapayInfo" style="display:${PAY==="instapay"?"block":"none"};background:#eef5f0;padding:12px;border-radius:10px;font-size:12px;margin-bottom:7px;color:#2f6b4a;text-align:center"><img src="${IP_QR}" alt="InstaPay QR" style="width:170px;height:170px;margin:0 auto 8px;background:#fff;border-radius:8px"><div><b>${LANG==="en"?"InstaPay address":"عنوان InstaPay"}:</b></div><div dir="ltr" style="font-weight:700;font-size:13px;margin:3px 0 7px;user-select:all">${IPA}</div><button type="button" class="big dark" style="padding:8px;font-size:12px" data-copy="${IPA}">${LANG==="en"?"Copy address":"نسخ العنوان"}</button><div style="margin-top:7px;color:var(--mut)">${LANG==="en"?"After transferring, send the receipt on":"بعد التحويل ابعتي صورة التحويل على"} <a href="https://wa.me/${waNum()}" target="_blank" rel="noopener" style="color:#2f6b4a;font-weight:700">WhatsApp</a></div></div>
 <div id="walletInfo" style="display:${PAY==="wallet"?"block":"none"};background:#eef5f0;padding:12px;border-radius:10px;font-size:12px;margin-bottom:7px;color:#2f6b4a;text-align:center"><div><b>${LANG==="en"?"Vodafone Cash wallet number":"رقم محفظة فودافون كاش"}:</b></div><div dir="ltr" style="font-weight:700;font-size:14px;margin:3px 0 7px;user-select:all">${localNum()}</div><button type="button" class="big dark" style="padding:8px;font-size:12px" data-copy="${localNum()}">${LANG==="en"?"Copy number":"نسخ الرقم"}</button><div style="margin-top:7px;color:var(--mut)">${LANG==="en"?"You can send from any wallet. After transferring, send the receipt on":"تقدري تحوّلي من أي محفظة. بعد التحويل ابعتي صورة التحويل على"} <a href="https://wa.me/${waNum()}" target="_blank" rel="noopener" style="color:#2f6b4a;font-weight:700">WhatsApp</a></div></div>`;
 
-$("#cartFoot").innerHTML=`<div class="tot"><span>${T("total")}</span><span>${money(t)}</span></div>${govSel}${shipLine}<div class="tot"><span>${T("grand")}</span><span>${money(grand)}</span></div><div class="cpn"><input class="in" type="text" placeholder="${LANG==="en"?"Discount code":"كود الخصم"}" autocomplete="off"><button type="button">${LANG==="en"?"Apply":"تطبيق"}</button></div><input class="in" id="cn" placeholder="${T("name")}" value="${esc(s.n)}"><input class="in" id="cp" placeholder="${T("phone")}" type="tel" value="${esc(s.p)}"><input class="in" id="ca" placeholder="${T("addr")}" value="${esc(s.a)}">${paySel}<p class="err" id="err"></p><button class="big dark" id="send">${T("send")}</button>`}
+$("#cartFoot").innerHTML=`<div class="tot"><span>${T("total")}</span><span>${money(t)}</span></div>${govSel}${shipLine}${da?`<div class="tot" style="color:#5f564b"><span>${LANG==="en"?"Discount":"خصم"} ${DISC.percent}% (${esc(DISC.code)})</span><span>−${money(da)}</span></div>`:""}<div class="tot"><span>${T("grand")}</span><span>${money(grand)}</span></div><div class="cpn"><input class="in" id="cpIn" type="text" placeholder="${LANG==="en"?"Discount code":"كود الخصم"}" autocomplete="off" autocapitalize="characters" value="${DISC?esc(DISC.code):""}" ${DISC?"readonly":""}><button type="button" id="cpBtn">${DISC?(LANG==="en"?"Remove":"إزالة"):(LANG==="en"?"Apply":"تطبيق")}</button></div><p class="cpm" id="cpMsg"></p><input class="in" id="cn" placeholder="${T("name")}" value="${esc(s.n)}"><input class="in" id="cp" placeholder="${T("phone")}" type="tel" value="${esc(s.p)}"><input class="in" id="ca" placeholder="${T("addr")}" value="${esc(s.a)}">${paySel}<p class="err" id="err"></p><button class="big dark" id="send">${T("send")}</button>`}
 
 async function sendOrder() {
   const n = $("#cn").value.trim(), p = $("#cp").value.trim(), a = $("#ca").value.trim(), e = $("#err"), gov = ls.get("alora_gov", "");
@@ -478,7 +480,7 @@ async function sendOrder() {
   const payVal = $("#payMethod") ? $("#payMethod").value : "cod";
   const payMethodText = payVal === "instapay" ? "InstaPay" : payVal === "wallet" ? "Vodafone Cash" : "Cash on Delivery";
 
-  const t = cartTotal(), row = govRow(gov), sc = shipFor(row, t), grand = sc === null ? t : t + sc;
+  const t = cartTotal(), row = govRow(gov), sc = shipFor(row, t), da = DISC ? Math.round(t * DISC.percent / 100) : 0, grand = (sc === null ? t : t + sc) - da;
   ls.set("alora_cust", { n, p, a });
 
   const orderPayload = {
@@ -495,6 +497,9 @@ async function sendOrder() {
     subtotal: t,
     shippingCost: sc === null ? 0 : sc,
     grandTotal: grand,
+    discountCode: DISC ? DISC.code : "",
+    discountPercent: DISC ? DISC.percent : 0,
+    discountAmount: da,
     items: cart.filter(i => byId(i.id)).map(i => {
       const x = byId(i.id);
       return { id: x.id, code: x.code || "", name: x.name, size: i.size || "-", qty: i.q, price: eff(x), itemTotal: eff(x) * i.q };
@@ -526,7 +531,8 @@ async function sendOrder() {
       throw err;
     }
 
-    track("Purchase", { value: grand, ids: cart.map(i => i.id) });
+    track("Purchase", { value: grand, ids: cart.map(i => i.id), contact: pd, discount: DISC ? DISC.code : "" });
+    if (DISC) { anUseCode(DISC.code, pd); DISC = null; ls.set("alora_disc", null); }   // الكود يُستخدم مرة واحدة
     cart = []; saveCart(); renderCart(); closeAll();
     ls.set("alora_last_order", { t: Date.now(), p: pd });
     showOrderOk(pd);
@@ -570,7 +576,7 @@ function openProduct(id){
 function pickSize(btn){curSize=btn.dataset.size;document.querySelectorAll("#sizes .chip").forEach(c=>{const on=c===btn;c.classList.toggle("on",on);c.setAttribute("aria-checked",on)});$("#szErr").textContent=""}
 function addFromModal(id){const p=byId(id);if(needSize(p)&&!curSize){$("#szErr").textContent=T("needSize");$("#sizes").scrollIntoView({block:"center",behavior:"smooth"});return}if(addToCart(id,curSize))closeAll()}
 function openLB(i){lbIdx=i;$("#lbI").src=optImg(lbList[i],1400);$("#lb").classList.add("on")}
-function toggleWish(id){const on=wish.includes(id);wish=on?wish.filter(x=>x!==id):[...wish,id];ls.set("alora_wish",wish);toast(on?T("toastRm"):T("toastWish"));renderReels();renderGrid();const b=document.querySelector(`[data-heartm="${CSS.escape(id)}"]`);if(b)b.innerHTML=(on?I.heart:I.heartF)+(on?T("addWish"):T("inWish"))}
+function toggleWish(id){const on=wish.includes(id);wish=on?wish.filter(x=>x!==id):[...wish,id];ls.set("alora_wish",wish);if(!on&&window.anLove)anLove(id);toast(on?T("toastRm"):T("toastWish"));renderReels();renderGrid();const b=document.querySelector(`[data-heartm="${CSS.escape(id)}"]`);if(b)b.innerHTML=(on?I.heart:I.heartF)+(on?T("addWish"):T("inWish"))}
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1900)}
 
 window.addEventListener('scroll', ()=>{const h=$('#mainHeader');if(h){window.scrollY>40?h.classList.add('scrolled'):h.classList.remove('scrolled')}});
@@ -652,6 +658,126 @@ document.addEventListener("input",e=>{
  if(["cn","cp","ca"].includes(e.target.id)){e.target.classList.remove("bad");const er=document.getElementById("err");if(er&&er.textContent)er.textContent=""}
 });
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTrack();if(e.key==="Enter"&&e.target.id==="trkP")submitTrack()});
+</script>
+<div class="tm" id="dpM" role="dialog" aria-modal="true"><div class="tbox">
+ <button type="button" class="s" data-dclose aria-label="إغلاق" style="align-self:flex-end;font-size:20px;line-height:1">×</button>
+ <div style="font-size:38px;line-height:1">🎁</div><h3>خصم 10% على طلبك الأول</h3>
+ <p>اكتبي رقم الواتساب وهنبعتلك كود الخصم، صالح لمدة 3 أيام.</p>
+ <input id="dpP" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX" autocomplete="tel">
+ <div class="tmsg" id="dpR" role="status"></div>
+ <button type="button" class="p" id="dpGo">أرسلي لي الكود</button>
+ <button type="button" class="s" data-dclose>لاحقاً</button>
+</div></div>
+<script>
+/* ================= التحليلات (n8n ← Meta CAPI + Google Sheets) وكود الخصم ================= */
+const AN_BASE = "https://n8n.hellolucidagency.com/webhook/alora-api";
+const AN_URL  = AN_BASE + "/analytics";
+// معرّف الجلسة: يتجدد بإغلاق التبويب
+const anSid = (() => { try { let v = sessionStorage.getItem("alora_sid"); if (!v) { v = "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); sessionStorage.setItem("alora_sid", v); } return v; } catch (e) { return "s" + Date.now(); } })();
+const anCookie = n => { const m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)")); return m ? decodeURIComponent(m[1]) : ""; };
+// مصدر الزيارة: utm_source ثم fbclid/gclid ثم الموقع المُحيل ثم مباشر (يُحفظ أول مصدر في الجلسة)
+const anSrc = (() => { try { let v = sessionStorage.getItem("alora_src"); if (v) return v; const u = new URLSearchParams(location.search); let r = u.get("utm_source") || (u.get("fbclid") ? "facebook" : "") || (u.get("gclid") ? "google" : ""); if (!r && document.referrer) { try { const h = new URL(document.referrer).hostname.replace(/^www\./, ""); if (h && h !== location.hostname.replace(/^www\./, "")) r = h; } catch (e) {} } v = r || "direct"; sessionStorage.setItem("alora_src", v); return v; } catch (e) { return "direct"; } })();
+const anDev = /iPad|Tablet/i.test(navigator.userAgent) ? "tablet" : /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "mobile" : "desktop";
+let AN_PHONE = ls.get("alora_phone", "");
+const anPost = (url, obj) => fetch(url, { method: "POST", keepalive: true, headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "payload=" + encodeURIComponent(JSON.stringify(obj)) });
+// ملخص السلة الحالية (أسماء المنتجات والإجمالي)
+function anCart() { const names = cart.map(i => { const p = byId(i.id); return p ? p.name : ""; }).filter(Boolean); return { product_name: names.join(" | "), cart_total: cartTotal(), num_items: cart.reduce((s, i) => s + i.q, 0), content_ids: cart.map(i => i.id) }; }
+// إرسال حدث إلى n8n (لا ينتظر الرد ولا يوقف الموقع لو فشل)
+function anSend(name, x = {}) {
+  try {
+    Object.keys(x).forEach(k => (x[k] === "" || x[k] === undefined) && delete x[k]);
+    const fb = new URLSearchParams(location.search).get("fbclid");
+    const c = (["InitiateCheckout", "Purchase"].includes(name) && cart.length) ? anCart() : {};
+    anPost(AN_URL, { event_name: name, event_id: "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8), timestamp: new Date().toISOString(), page_url: location.href, referrer: document.referrer, traffic_source: anSrc, device_type: anDev, session_id: anSid, user_agent: navigator.userAgent, fbp: anCookie("_fbp"), fbc: anCookie("_fbc") || (fb ? "fb.1." + Date.now() + "." + fb : ""), user_contact: AN_PHONE, currency: "EGP", ...c, ...x }).catch(() => {});
+  } catch (e) {}
+}
+// الضغط على القلب (Wishlist_Love): حدث مخصص في بيكسل Meta و n8n
+function anLove(id) { const p = byId(id); if (!p) return; const eid = "e" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); try { window.fbq && fbq("trackCustom", "Wishlist_Love", { content_ids: [id], content_name: p.name }, { eventID: eid }); } catch (e) {} anSend("Wishlist_Love", { event_id: eid, product_name: p.name, product_id: id, content_ids: [id], value: eff(p) }); }
+// التقاط السلة المتروكة: أول ما يُكتب رقم هاتف صحيح في السلة (مرة لكل رقم كل 24 ساعة)
+function anPhone(pd) {
+  AN_PHONE = pd; ls.set("alora_phone", pd);
+  if (!cart.length) return;
+  const key = "alora_ac_" + pd; if (Date.now() - ls.get(key, 0) < 864e5) return; ls.set(key, Date.now());
+  anSend("InitiateCheckout", { user_contact: pd, abandon_capture: true, capi_skip: true });   // capi_skip: يُسجَّل ويُتابَع ولا يُحتسب مرة ثانية في Meta
+}
+function anUseCode(code, phone) { try { anPost(AN_BASE + "/discount-use", { code, phone }).catch(() => {}); } catch (e) {} }
+document.addEventListener("focusout", e => { if (e.target.id === "cp") { const pd = e.target.value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\D/g, "").replace(/^20/, "0"); if (/^01[0125]\d{8}$/.test(pd)) anPhone(pd); } });
+anSend("PageView", { event_id: window.__pvid });
+
+/* ---------- كود الخصم داخل السلة ---------- */
+document.addEventListener("click", async e => {
+  const b = e.target.closest("#cpBtn"); if (!b) return;
+  const msg = document.getElementById("cpMsg"), inp = document.getElementById("cpIn");
+  const keep = () => { const g = id => (document.getElementById(id) || {}).value || ""; ls.set("alora_cust", { n: g("cn"), p: g("cp"), a: g("ca") }); };   // نحفظ ما كتبته العميلة قبل إعادة رسم السلة
+  if (DISC) { DISC = null; ls.set("alora_disc", null); keep(); renderCart(); return; }
+  const code = inp.value.trim().toUpperCase();
+  if (!code) { msg.className = "cpm er"; msg.textContent = "اكتبي كود الخصم أولاً"; return; }
+  b.disabled = true; msg.className = "cpm"; msg.textContent = "جاري التحقق...";
+  try {
+    const j = await (await fetch(AN_BASE + "/discount-check?code=" + encodeURIComponent(code))).json();
+    if (j && j.valid) { DISC = { code: j.code || code, percent: Number(j.percent) || 10 }; ls.set("alora_disc", DISC); keep(); renderCart(); toast("تم تطبيق الخصم 🤍"); return; }
+    msg.className = "cpm er"; msg.textContent = { used: "الكود ده اتستخدم قبل كده", expired: "انتهت صلاحية الكود" }[j && j.reason] || "الكود غير صحيح";
+  } catch (err) { console.error("Discount check failed", err); msg.className = "cpm er"; msg.textContent = "تعذّر التحقق الآن، حاولي مرة أخرى."; }
+  b.disabled = false;
+});
+// لو في خصم محفوظ من زيارة سابقة نتأكد إنه لسه صالح (لم يُستخدم أو تنتهِ مدته)
+if (DISC) fetch(AN_BASE + "/discount-check?code=" + encodeURIComponent(DISC.code)).then(r => r.json()).then(j => { if (!(j && j.valid)) { DISC = null; ls.set("alora_disc", null); renderCart(); } }).catch(() => {});
+
+/* ---------- نافذة الخصم 10% ---------- */
+const dpEl = () => document.getElementById("dpM");
+function dpCanShow() { return !DISC && !ls.get("alora_last_order", null) && Date.now() - ls.get("alora_dp", 0) > 7 * 864e5; }   // مرة كل 7 أيام، ولا تظهر لمن طلبت قبل كده
+function dpTry(n) {
+  if (!dpCanShow()) return;
+  const busy = document.getElementById("ov").classList.contains("on") || document.querySelector(".tm.on");
+  if (busy) { if (n < 4) setTimeout(() => dpTry(n + 1), 15000); return; }   // لا نقاطع العميلة وهي تتصفح منتج أو سلة
+  ls.set("alora_dp", Date.now()); dpEl().classList.add("on");
+}
+setTimeout(() => dpTry(0), 25000);
+document.addEventListener("click", async e => {
+  if (e.target.closest("[data-dclose]") || e.target === dpEl()) { dpEl().classList.remove("on"); return; }
+  if (!e.target.closest("#dpGo")) return;
+  const r = document.getElementById("dpR"), b = document.getElementById("dpGo");
+  const pd = document.getElementById("dpP").value.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/\D/g, "").replace(/^20/, "0");
+  if (!/^01[0125]\d{8}$/.test(pd)) { r.className = "tmsg er"; r.textContent = "اكتبي رقم موبايل صحيح من 11 رقم."; return; }
+  b.disabled = true; r.className = "tmsg"; r.textContent = "جاري الإرسال...";
+  try {
+    const j = await (await fetch(AN_BASE + "/discount-request", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: "payload=" + encodeURIComponent(JSON.stringify({ phone: pd, session_id: anSid })) })).json();
+    if (j.status === "sent") { r.className = "tmsg ok"; r.textContent = "تم إرسال كود الخصم على الواتساب 🤍 صالح 3 أيام."; AN_PHONE = pd; ls.set("alora_phone", pd); const c = ls.get("alora_cust", {}); if (!c.p) { c.p = pd; ls.set("alora_cust", c); } }
+    else if (j.status === "already_used") { r.className = "tmsg er"; r.textContent = "استخدمتِ خصم الطلب الأول قبل كده 🤍"; }
+    else { r.className = "tmsg er"; r.textContent = "اكتبي رقم موبايل صحيح."; }
+  } catch (err) { console.error("Discount request failed", err); r.className = "tmsg er"; r.textContent = "حدث خطأ، حاولي مرة أخرى بعد قليل."; }
+  b.disabled = false;
+});
+</script>
+<script>
+/* ================= بيانات المنتجات المنظمة (JSON-LD Product Schema) + رابط المنتج المباشر ================= */
+const SCHEMA_BASE = "https://bwalora.com/";
+const SCHEMA_BRAND = "Black & White Alora";
+const prodUrl = p => SCHEMA_BASE + "?p=" + encodeURIComponent(p.code || p.id);   // يجب أن يطابق عمود link في ملف Merchant Center
+function schemaProduct(p) {
+  const imgs = (p.imgs || []).filter(u => u && u !== PH).slice(0, 6).map(u => optImg(u, 1200));
+  if (!imgs.length) return null;                                    // جوجل يشترط صورة
+  return {
+    "@type": "Product", name: p.name, description: String(p.desc || p.name).replace(/\s+/g, " ").trim(),
+    sku: String(p.code || p.id), mpn: String(p.code || p.id), image: imgs, category: p.cat || undefined,
+    brand: { "@type": "Brand", name: SCHEMA_BRAND },
+    offers: { "@type": "Offer", url: prodUrl(p), priceCurrency: "EGP", price: Number(eff(p)).toFixed(2),
+      availability: "https://schema.org/" + (p.stock === "out_of_stock" ? "OutOfStock" : "InStock"),
+      itemCondition: "https://schema.org/NewCondition", seller: { "@type": "Organization", name: SCHEMA_BRAND } },
+  };
+}
+function anSchema() {
+  if (!P.length) return;
+  const q = new URLSearchParams(location.search).get("p");
+  const cur = q ? P.find(x => String(x.code) === q || String(x.id) === q) : null;
+  let data;
+  if (cur && schemaProduct(cur)) data = { "@context": "https://schema.org", ...schemaProduct(cur) };          // صفحة منتج واحد
+  else data = { "@context": "https://schema.org", "@type": "ItemList", itemListElement: P.map(schemaProduct).filter(Boolean).map((it, i) => ({ "@type": "ListItem", position: i + 1, url: it.offers.url, item: it })) };
+  let el = document.getElementById("ldProducts");
+  if (!el) { el = document.createElement("script"); el.type = "application/ld+json"; el.id = "ldProducts"; document.head.appendChild(el); }
+  el.textContent = JSON.stringify(data);
+  if (cur && !window.__deepOpened) { window.__deepOpened = 1; setTimeout(() => openProduct(cur.id), 0); }   // الرابط المباشر يفتح المنتج
+}
 </script>
 </body>
 </html>
