@@ -4,509 +4,237 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Alora Analytics Dashboard | لوحة تحليلات ألورا</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>لوحة تحليلات ألورا</title>
 <style>
-:root {
-  --bg: #F8FAFC;
-  --card: #FFFFFF;
-  --text-main: #0F172A;
-  --text-muted: #64748B;
-  --border: #E2E8F0;
-  --primary: #4F46E5;
-  --primary-light: #EEF2FF;
-  --success: #10B981;
-  --success-light: #ECFDF5;
-  --info: #06B6D4;
-  --info-light: #CFFAFE;
-  --warning: #F59E0B;
-  --warning-light: #FEF3C7;
-  --danger: #EF4444;
-  --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-  --font-ar: 'Readex Pro', system-ui, -apple-system, sans-serif;
-  --font-en: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-}
-
-* { box-sizing: border-box; transition: all 0.2s ease-in-out; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text-main);
-  font-family: var(--font-ar);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-[dir="ltr"] body, [dir="ltr"] button, [dir="ltr"] input, [dir="ltr"] select {
-  font-family: var(--font-en);
-}
-
-button, input, select { font: inherit; color: inherit; }
-button { cursor: pointer; border: 0; }
-input, select {
-  background: #FFFFFF;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 14px;
-  outline: none;
-}
-input:focus, select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
-}
-
-.btn {
-  background: var(--primary);
-  color: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
-}
-.btn:hover { background: #4338CA; transform: translateY(-1px); }
-.btn.secondary {
-  background: #FFFFFF;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  box-shadow: none;
-}
-.btn.secondary:hover { background: var(--primary-light); color: var(--primary); border-color: #C7D2FE; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-/* Login Container */
-#login {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #EEF2FF 0%, #F8FAFC 50%, #E0E7FF 100%);
-}
-.lbox {
-  background: var(--card);
-  border-radius: 24px;
-  padding: 36px 30px;
-  width: min(400px, 100%);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-.lbox-icon {
-  width: 56px;
-  height: 56px;
-  background: var(--primary-light);
-  color: var(--primary);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  margin: 0 auto;
-}
-.lbox h1 { font-size: 22px; font-weight: 700; margin: 0; color: var(--text-main); }
-.lbox p { margin: 0; color: var(--text-muted); font-size: 14px; }
-.err { color: var(--danger); font-size: 13px; font-weight: 500; min-height: 20px; }
-
-/* Header & Nav */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand-badge {
-  background: var(--primary-light);
-  color: var(--primary);
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 18px;
-}
-header h1 { font-size: 18px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
-header small { color: var(--text-muted); font-size: 12px; font-weight: 400; display: block; }
-.nav-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-main { max-width: 1380px; margin: 0 auto; padding: 24px 16px; }
-
-/* Filters Bar */
-.filters {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  margin-bottom: 20px;
-}
-.filters label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1 1 160px;
-}
-
-/* KPI Cards Grid */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-.kpi {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.kpi::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 4px;
-  background: var(--kpi-color, var(--primary));
-}
-.kpi-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.kpi-title { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-.kpi-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: var(--kpi-bg, var(--primary-light));
-  color: var(--kpi-color, var(--primary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.kpi b { font-size: 26px; font-weight: 700; color: var(--text-main); line-height: 1.2; word-break: break-word; }
-.kpi b.text-sm { font-size: 16px; }
-.kpi small { display: block; color: var(--text-muted); font-size: 12px; margin-top: 6px; font-weight: 400; }
-
-/* Charts Layout */
-.charts {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 20px;
-  margin-bottom: 24px;
-}
-.ch {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  grid-column: span 6;
-}
-.ch.full { grid-column: span 12; }
-.ch.span-4 { grid-column: span 4; }
-.ch.span-8 { grid-column: span 8; }
-
-@media (max-width: 992px) {
-  .ch, .ch.span-4, .ch.span-8 { grid-column: span 12; }
-}
-
-.ch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.ch-header h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-main); }
-.cv { position: relative; height: 280px; width: 100%; }
-
-/* Collapsible Table Section */
-.tw-section {
-  background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-.tw-toggle-bar {
-  padding: 16px 20px;
-  background: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  user-select: none;
-}
-.tw-toggle-bar h3 { margin: 0; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.tbar {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 16px 20px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-}
-.scroll { overflow-x: auto; max-height: 500px; }
-table { border-collapse: collapse; width: 100%; font-size: 13px; text-align: start; }
-th {
-  background: #F1F5F9;
-  color: var(--text-muted);
-  font-weight: 600;
-  padding: 12px 14px;
-  white-space: nowrap;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  border-bottom: 1px solid var(--border);
-}
-td {
-  padding: 12px 14px;
-  border-top: 1px solid var(--border);
-  max-width: 280px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--text-main);
-}
-tr:hover td { background: var(--primary-light); }
-.pg {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  background: #FFFFFF;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-.empty { padding: 40px; text-align: center; color: var(--text-muted); font-size: 14px; }
+:root{--bg:#F5F7FB;--card:#fff;--ink:#0f172a;--mut:#64748b;--line:#e8ecf3;--soft:#f1f5f9;--bad:#e11d48;--em:#10b981;--in:#6366f1;--cy:#06b6d4;--ro:#f43f5e;--am:#f59e0b;--vi:#8b5cf6;
+--sh:0 1px 2px rgba(16,24,40,.04),0 6px 18px rgba(16,24,40,.06)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI","Noto Sans Arabic",Tahoma,Arial,sans-serif;font-size:14px;line-height:1.5}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+input,select{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:16px;min-width:0;outline:none}
+input:focus,select:focus{border-color:var(--in);box-shadow:0 0 0 3px rgba(99,102,241,.14)}
+svg{display:block;flex:none}
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:#fff;padding:9px 15px;border-radius:10px;font-weight:600;font-size:13.5px;white-space:nowrap}
+.btn.o{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn.in{background:var(--in)}.btn:disabled{opacity:.55;cursor:default}
+.btn svg{width:16px;height:16px}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px;position:relative}
+.lbox{background:var(--card);border-radius:20px;padding:30px 24px;width:min(380px,100%);text-align:center;display:flex;flex-direction:column;gap:13px;box-shadow:var(--sh)}
+.lbox .lg{width:52px;height:52px;border-radius:16px;background:#eef2ff;color:var(--in);display:grid;place-items:center;margin:0 auto}.lbox .lg svg{width:24px;height:24px}
+.lbox h1{font-size:18px;margin:0}.lbox p{margin:0;color:var(--mut);font-size:13px}.err{color:var(--bad);font-size:13px;min-height:19px}
+.lang{display:inline-flex;background:var(--soft);border-radius:10px;padding:3px}.lang button{padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:700;color:var(--mut)}.lang button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(16,24,40,.12)}
+#login .lang{position:absolute;top:16px;inset-inline-end:16px}
+header{position:sticky;top:0;z-index:5;background:rgba(245,247,251,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:190px}.brand .lg{width:34px;height:34px;border-radius:10px;background:var(--in);color:#fff;display:grid;place-items:center}.brand .lg svg{width:18px;height:18px}
+.brand h1{font-size:16px;margin:0;line-height:1.2}.brand small{display:block;color:var(--mut);font-size:11.5px}
+main{max-width:1320px;margin:0 auto;padding:16px 18px 40px}
+.note{display:flex;gap:10px;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:11px 13px;margin-bottom:14px;font-size:12.5px;line-height:1.8;color:#92400e}.note svg{width:18px;height:18px;margin-top:3px;color:var(--am)}
+.panel{background:var(--card);border-radius:16px;box-shadow:var(--sh);border:1px solid var(--line)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:12px 14px;margin-bottom:14px}
+.filters label{font-size:12px;color:var(--mut);display:flex;flex-direction:column;gap:4px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:var(--card);border-radius:16px;padding:15px;box-shadow:var(--sh);border:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.kpi .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center}.kpi .ic svg{width:20px;height:20px}
+.kpi .tx{min-width:0;flex:1}.kpi span{display:block;font-size:12.5px;color:var(--mut);font-weight:600}.kpi b{display:block;font-size:24px;line-height:1.25;margin-top:2px;word-break:break-word}.kpi b.t{font-size:16px;margin-top:5px}
+.kpi small{display:block;color:var(--mut);font-size:11.5px;margin-top:2px}
+.c-em{background:#ecfdf5;color:#059669}.c-in{background:#eef2ff;color:#4f46e5}.c-cy{background:#ecfeff;color:#0891b2}.c-ro{background:#fff1f2;color:#e11d48}.c-am{background:#fffbeb;color:#d97706}.c-vi{background:#f5f3ff;color:#7c3aed}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-bottom:14px}
+.ch{padding:14px}.ch h3{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px}.ch h3 svg{width:17px;height:17px;color:var(--mut)}.ch h3 small{color:var(--mut);font-weight:400;font-size:11.5px}
+.ch.w{grid-column:1/-1}.cv{position:relative;height:250px}.ch.w .cv{height:285px}
+.wl h3 svg{color:var(--ro)}.wl p{margin:-4px 0 10px;color:var(--mut);font-size:12px}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{background:var(--soft);text-align:start;padding:9px 10px;white-space:nowrap;font-weight:700;color:#475569}
+td{padding:9px 10px;border-top:1px solid var(--line);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}tr:hover td{background:#fafbfe}
+.num{text-align:end;font-variant-numeric:tabular-nums}.rank{width:34px;color:var(--mut)}
+.empty{padding:26px;text-align:center;color:var(--mut)}
+details.raw{padding:0;overflow:hidden}details.raw summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px 16px;font-weight:700;font-size:14px}
+details.raw summary::-webkit-details-marker{display:none}details.raw summary .chev{margin-inline-start:auto;transition:transform .2s;color:var(--mut)}details.raw[open] summary .chev{transform:rotate(180deg)}
+details.raw summary svg{width:18px;height:18px;color:var(--in)}
+.tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-top:1px solid var(--line)}
+.pg{display:flex;gap:10px;align-items:center;justify-content:center;padding:12px;flex-wrap:wrap;border-top:1px solid var(--line);color:var(--mut)}
 </style>
 </head>
 <body>
 
 <div id="login">
+  <div class="lang" data-lang-switch><button type="button" data-l="ar">AR</button><button type="button" data-l="en">EN</button></div>
   <form class="lbox" id="lf" autocomplete="off">
-    <div class="lbox-icon">📊</div>
-    <h1 data-i18n="login_title">لوحة تحليلات ألورا</h1>
-    <p data-i18n="login_sub">أدخلي كلمة السر للوصول للوحة المبيعات والزيارات</p>
-    <input type="password" id="pw" placeholder="••••••••" required autofocus>
+    <div class="lg"><i data-ic="lock"></i></div>
+    <h1 data-i="login_title"></h1>
+    <p data-i="login_hint"></p>
+    <input type="password" id="pw" data-ph="pw_ph" autocomplete="current-password" required>
     <div class="err" id="lerr" role="alert"></div>
-    <button class="btn" id="lgo" type="submit" data-i18n="login_btn">دخول اللوحة</button>
+    <button class="btn in" id="lgo" type="submit" style="justify-content:center" data-i="enter"></button>
   </form>
 </div>
 
 <div id="app" hidden>
   <header>
-    <div class="brand">
-      <div class="brand-badge">ALORA</div>
-      <div>
-        <h1 data-i18n="dash_title">لوحة تحليلات المتجر</h1>
-        <small id="upd"></small>
-      </div>
-    </div>
-    <div class="nav-actions">
-      <select id="range">
-        <option value="0" data-i18n="range_all">كل البيانات</option>
-        <option value="7" data-i18n="range_7">آخر 7 أيام</option>
-        <option value="30" data-i18n="range_30" selected>آخر 30 يوم</option>
-        <option value="90" data-i18n="range_90">آخر 90 يوم</option>
-      </select>
-      <button class="btn secondary" id="langToggle" type="button">English 🌐</button>
-      <button class="btn secondary" id="refresh" type="button">🔄 <span data-i18n="btn_refresh">تحديث</span></button>
-      <button class="btn secondary" id="logout" type="button">🚪 <span data-i18n="btn_logout">خروج</span></button>
-    </div>
+    <div class="brand"><div class="lg"><i data-ic="chart"></i></div><div><h1 data-i="title"></h1><small id="upd"></small></div></div>
+    <div class="lang" data-lang-switch><button type="button" data-l="ar">AR</button><button type="button" data-l="en">EN</button></div>
+    <label style="font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px"><span data-i="load"></span>
+      <select id="range"><option value="0" data-i="r_all"></option><option value="30" data-i="r_30"></option><option value="90" data-i="r_90"></option></select>
+    </label>
+    <button class="btn" id="refresh" type="button"><i data-ic="refresh"></i><span data-i="refresh"></span></button>
+    <button class="btn o" id="logout" type="button"><i data-ic="logout"></i><span data-i="logout"></span></button>
   </header>
-
   <main>
-    <!-- Filters -->
-    <div class="filters">
-      <label><span data-i18n="filter_from">من تاريخ</span><input type="date" id="fFrom"></label>
-      <label><span data-i18n="filter_to">إلى تاريخ</span><input type="date" id="fTo"></label>
-      <label><span data-i18n="filter_city">المدينة</span><select id="fCity"><option value="" data-i18n="all_cities">كل المدن</option></select></label>
-      <button class="btn secondary" id="fReset" type="button" style="align-self: flex-end;" data-i18n="btn_reset">إعادة ضبط</button>
+    <div class="note" id="note" hidden><i data-ic="alert"></i><div id="noteTx"></div></div>
+
+    <div class="panel filters">
+      <label><span data-i="from"></span><input type="date" id="fFrom"></label>
+      <label><span data-i="to"></span><input type="date" id="fTo"></label>
+      <label><span data-i="city"></span><select id="fCity"></select></label>
+      <button class="btn o" id="fReset" type="button"><i data-ic="reset"></i><span data-i="reset"></span></button>
     </div>
 
-    <!-- Executive KPI Cards -->
     <section class="cards" id="cards"></section>
 
-    <!-- Analytics Charts -->
-    <section class="charts">
-      <div class="ch full">
-        <div class="ch-header">
-          <h3 data-i18n="chart_trend">📈 حركية الزيارات والمبيعات اليومية</h3>
-        </div>
-        <div class="cv"><canvas id="cTrend"></canvas></div>
+    <section class="grid2">
+      <div class="panel ch w"><h3><i data-ic="trend"></i><span data-i="c_trend"></span></h3><div class="cv"><canvas id="cTrend"></canvas></div></div>
+      <div class="panel ch wl">
+        <h3><i data-ic="heart"></i><span data-i="w_title"></span></h3>
+        <p data-i="w_hint"></p>
+        <div class="scroll"><table><thead id="wlHead"></thead><tbody id="wlBody"></tbody></table></div>
+        <div style="margin-top:12px"><button class="btn o" id="wlExport" type="button"><i data-ic="download"></i><span data-i="w_export"></span></button></div>
       </div>
-
-      <div class="ch span-4">
-        <div class="ch-header">
-          <h3 data-i18n="chart_events">⚡ توزيع الأحداث (Events)</h3>
-        </div>
-        <div class="cv"><canvas id="cEvents"></canvas></div>
-      </div>
-
-      <div class="ch span-4">
-        <div class="ch-header">
-          <h3 data-i18n="chart_devices">📱 أنواع الأجهزة المستخدمة</h3>
-        </div>
-        <div class="cv"><canvas id="cDev"></canvas></div>
-      </div>
-
-      <div class="ch span-4">
-        <div class="ch-header">
-          <h3 data-i18n="chart_cities">🌍 أعلى المدن والمحافظات</h3>
-        </div>
-        <div class="cv"><canvas id="cCity"></canvas></div>
-      </div>
-
-      <div class="ch full">
-        <div class="ch-header">
-          <h3 data-i18n="chart_products">💎 المنتجات الأكثر مشاهدة وتفاعلاً</h3>
-        </div>
-        <div class="cv"><canvas id="cProd"></canvas></div>
-      </div>
+      <div class="panel ch"><h3><i data-ic="activity"></i><span data-i="c_events"></span> <small data-i="c_events_hint"></small></h3><div class="cv"><canvas id="cEvents"></canvas></div></div>
+      <div class="panel ch"><h3><i data-ic="device"></i><span data-i="c_dev"></span></h3><div class="cv"><canvas id="cDev"></canvas></div></div>
+      <div class="panel ch"><h3><i data-ic="pin"></i><span data-i="c_city"></span></h3><div class="cv"><canvas id="cCity"></canvas></div></div>
+      <div class="panel ch"><h3><i data-ic="package"></i><span data-i="c_prod"></span></h3><div class="cv"><canvas id="cProd"></canvas></div></div>
     </section>
 
-    <!-- Detailed Raw Data Table (Collapsible) -->
-    <section class="tw-section">
-      <div class="tw-toggle-bar" id="twToggle">
-        <h3>📄 <span data-i18n="raw_data_title">سجلات البيانات التفصيلية (Raw Data)</span></h3>
-        <span id="twIcon" style="font-size: 18px; color: var(--text-muted);">▼</span>
+    <details class="panel raw" id="raw">
+      <summary><i data-ic="table"></i><span data-i="raw_title"></span><span class="chev"><i data-ic="chev"></i></span></summary>
+      <div class="tbar">
+        <input id="fQ" type="search" data-ph="search_ph" style="flex:1 1 220px">
+        <select id="fEvent"></select>
+        <select id="perPage"><option>25</option><option>50</option><option>100</option></select>
+        <button class="btn" id="csv" type="button"><i data-ic="download"></i><span data-i="csv"></span></button>
       </div>
-      <div id="twContent" hidden>
-        <div class="tbar">
-          <input id="fQ" type="search" placeholder="🔎 بحث في السجلات..." style="flex:1 1 240px">
-          <select id="fEvent"><option value="" data-i18n="all_events">كل الأحداث</option></select>
-          <select id="perPage"><option>25</option><option>50</option><option>100</option></select>
-          <button class="btn secondary" id="csv" type="button">⬇️ <span data-i18n="btn_export">تصدير CSV</span></button>
-        </div>
-        <div class="scroll"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-        <div class="pg">
-          <button class="btn secondary" id="prev" type="button" data-i18n="btn_prev">السابق</button>
-          <span id="pinfo"></span>
-          <button class="btn secondary" id="next" type="button" data-i18n="btn_next">التالي</button>
-        </div>
-      </div>
-    </section>
+      <div class="scroll"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+      <div class="pg"><button class="btn o" id="prev" type="button" data-i="prev"></button><span id="pinfo"></span><button class="btn o" id="next" type="button" data-i="next"></button></div>
+    </details>
   </main>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-/* ================= Script Configuration ================= */
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdewMZzuBkDQ2vWbU1IrOEYELpYlp5H1YJzbtrp5i3tSyW7LKO3cgRGJqPsrx9c8Df9g/exec";
-const TZ = "Africa/Cairo";
-/* ======================================================== */
+/* ================= الإعدادات / Settings: ضعي رابط Web App هنا ================= */
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdewMZzuBkDQ2vWbU1IrOEYELpYlp5H1YJzbtrp5i3tSyW7LKO3cgRGJqPsrx9c8Df9g/exec";   // الرابط الذي ينتهي بـ /exec من Google Apps Script
+const TZ = "Africa/Cairo";                      // المنطقة الزمنية لعرض التواريخ
+/* ============================================================================ */
 
+/* ---------- النصوص: كل لغة منفصلة تماماً ---------- */
 const I18N = {
   ar: {
-    login_title: "لوحة تحليلات ألورا",
-    login_sub: "أدخلي كلمة السر للوصول للوحة المبيعات والزيارات",
-    login_btn: "دخول اللوحة",
-    dash_title: "لوحة تحليلات المتجر",
-    range_all: "كل البيانات", range_7: "آخر 7 أيام", range_30: "آخر 30 يوم", range_90: "آخر 90 يوم",
-    btn_refresh: "تحديث", btn_logout: "خروج", filter_from: "من تاريخ", filter_to: "إلى تاريخ", filter_city: "المدينة", all_cities: "كل المدن",
-    btn_reset: "إعادة ضبط",
-    kpi_visits: "إجمالي الزيارات", kpi_unique: "الزوار الفريدون", kpi_revenue: "إجمالي المبيعات",
-    kpi_checkout: "بدء إتمام الطلب", kpi_purchases: "عمليات الشراء الناجحة", kpi_contacts: "أرقام أسرّت بالاهتمام",
-    kpi_top_city: "أعلى مدينة", kpi_top_prod: "المنتج الأكثر مشاهدة",
-    chart_trend: "📈 حركية الزيارات والمبيعات اليومية", chart_events: "⚡ توزيع الأحداث (Events)", chart_devices: "📱 أنواع الأجهزة المستخدمة", chart_cities: "🌍 أعلى المدن والمحافظات", chart_products: "💎 المنتجات الأكثر مشاهدة وتفاعلاً",
-    raw_data_title: "سجلات البيانات التفصيلية (Raw Data)", all_events: "كل الأحداث", btn_export: "تصدير CSV", btn_prev: "السابق", btn_next: "التالي",
-    err_pw: "كلمة السر غير صحيحة.", err_conn: "تعذّر الاتصال بالسكربت، تأكدي من الرابط والنشر."
+    title: "لوحة تحليلات ألورا", login_title: "لوحة تحليلات ألورا", login_hint: "اكتبي كلمة السر للدخول", pw_ph: "كلمة السر", enter: "دخول",
+    bad_pw: "كلمة السر غير صحيحة.", net_err: "تعذّر الاتصال بالسكربت، تأكدي من الرابط والنشر.", set_url: "ضعي رابط تطبيق الويب الصحيح في أعلى كود الصفحة (WEB_APP_URL).",
+    fail: "تعذّر جلب البيانات", upd_fail: "تعذّر التحديث: ", upd: "آخر تحديث: ", load: "تحميل", r_all: "كل البيانات", r_30: "آخر 30 يوم", r_90: "آخر 90 يوم",
+    refresh: "تحديث", logout: "خروج", from: "من تاريخ", to: "إلى تاريخ", city: "المدينة", all_cities: "كل المدن", reset: "إعادة ضبط",
+    k_visits: "إجمالي الزيارات", k_unique: "الزوار الفريدون", k_checkout: "بدء إتمام الطلب", k_purchase: "عمليات الشراء", k_phones: "أرقام التواصل الملتقطة",
+    k_wish: "المعجبون بالمنتجات", k_city: "أعلى مدينة", k_prod: "المنتج الأكثر مشاهدة",
+    s_est: "تقديري (عنوان الشبكة + الجهاز)", s_nopv: "كل الأحداث (لا توجد زيارات مسجّلة)", s_wish: (v, p) => `${v} زائر · ${p} رقم`, s_events: n => `${n} حدث`, s_views: n => `${n} مشاهدة`,
+    c_trend: "زيارات الأيام", c_events: "أنواع الأحداث", c_events_hint: "(اضغطي على نوع لتصفية الجدول)", c_dev: "أنواع الأجهزة", c_city: "أعلى المدن والمحافظات", c_prod: "أعلى المنتجات تفاعلاً",
+    ds_visits: "الزيارات", ds_all: "كل الأحداث", ds_events: "عدد الأحداث", ds_inter: "عدد التفاعلات",
+    w_title: "المنتجات الأكثر إعجاباً", w_hint: "استهدفي هؤلاء العملاء بحملات وخصومات", w_prod: "المنتج", w_likes: "الإعجابات", w_vis: "زوار", w_contacts: "أرقام", w_export: "تصدير قائمة المعجبين", w_empty: "لا توجد إعجابات بعد.",
+    raw_title: "جدول البيانات الخام", search_ph: "بحث في كل الأعمدة...", all_events: "كل الأحداث", csv: "تصدير البيانات", prev: "السابق", next: "التالي",
+    page: (p, n, t) => `صفحة ${p} من ${n} — ${t} سجل`, no_data: "لا توجد بيانات مطابقة.", chart_fail: "تعذّر تحميل مكتبة الرسوم البيانية.",
+    note: cols => `أعمدة غير موجودة في الشيت حالياً: ${cols}. اللوحة تعرض الأعمدة الموجودة فقط. لإضافتها اكتبي عناوينها في الصف الأول من التبويب وأضيفي الحقول المقابلة في نود Google Sheets في n8n.`,
+    d_mobile: "موبايل", d_desktop: "ديسكتوب", d_tablet: "تابلت", d_unknown: "غير محدد", unknown: "غير معروف", direct: "مباشر",
+    ev: { PageView: "زيارة صفحة", ViewContent: "مشاهدة منتج", AddToCart: "إضافة للسلة", Wishlist_Love: "إعجاب بمنتج", InitiateCheckout: "بدء إتمام الطلب", Purchase: "شراء" },
+    col: { timestamp: "الوقت", event_name: "الحدث", page_url: "رابط الصفحة", product_name: "المنتج", traffic_source: "مصدر الزيارة", user_ip: "عنوان الشبكة", country_city: "الدولة والمدينة", device_type: "الجهاز", user_contact: "رقم التواصل", user_agent: "المتصفح", session_id: "معرّف الجلسة", value: "القيمة", currency: "العملة", num_items: "عدد القطع" },
+    am: "ص", pm: "م",
   },
   en: {
-    login_title: "Alora Analytics Dashboard",
-    login_sub: "Enter passcode to access sales & store analytics",
-    login_btn: "Access Dashboard",
-    dash_title: "Store Analytics Dashboard",
-    range_all: "All Time", range_7: "Last 7 Days", range_30: "Last 30 Days", range_90: "Last 90 Days",
-    btn_refresh: "Refresh", btn_logout: "Logout", filter_from: "From Date", filter_to: "To Date", filter_city: "City", all_cities: "All Cities",
-    btn_reset: "Reset Filters",
-    kpi_visits: "Total Visits", kpi_unique: "Unique Visitors", kpi_revenue: "Total Sales Revenue",
-    kpi_checkout: "Initiate Checkout", kpi_purchases: "Completed Purchases", kpi_contacts: "Captured Contacts",
-    kpi_top_city: "Top City", kpi_top_prod: "Most Viewed Product",
-    chart_trend: "📈 Daily Traffic & Conversions", chart_events: "⚡ Event Distribution", chart_devices: "📱 Device Types", chart_cities: "🌍 Top Cities & Regions", chart_products: "💎 Top Interacted Products",
-    raw_data_title: "Detailed Log Records (Raw Data)", all_events: "All Events", btn_export: "Export CSV", btn_prev: "Previous", btn_next: "Next",
-    err_pw: "Incorrect passcode.", err_conn: "Connection failed. Please verify Web App URL & deployment."
-  }
+    title: "Alora Analytics Dashboard", login_title: "Alora Analytics Dashboard", login_hint: "Enter the password to continue", pw_ph: "Password", enter: "Sign in",
+    bad_pw: "Incorrect password.", net_err: "Could not reach the script. Check the URL and deployment.", set_url: "Set the correct Web App URL at the top of the page code (WEB_APP_URL).",
+    fail: "Failed to load data", upd_fail: "Refresh failed: ", upd: "Last updated: ", load: "Load", r_all: "All data", r_30: "Last 30 days", r_90: "Last 90 days",
+    refresh: "Refresh", logout: "Sign out", from: "From date", to: "To date", city: "City", all_cities: "All cities", reset: "Reset",
+    k_visits: "Total Visits", k_unique: "Unique Visitors", k_checkout: "Checkout Starts", k_purchase: "Purchases", k_phones: "Captured Phone Numbers",
+    k_wish: "Wishlist Leads", k_city: "Top City", k_prod: "Most Viewed Product",
+    s_est: "Estimated (IP + device)", s_nopv: "All events (no PageView found)", s_wish: (v, p) => `${v} visitors · ${p} contacts`, s_events: n => `${n} events`, s_views: n => `${n} views`,
+    c_trend: "Daily Traffic", c_events: "Event Types", c_events_hint: "(click a type to filter the table)", c_dev: "Device Types", c_city: "Top Cities & Governorates", c_prod: "Top Engaged Products",
+    ds_visits: "Visits", ds_all: "All events", ds_events: "Events", ds_inter: "Interactions",
+    w_title: "Top Wishlisted Products", w_hint: "Target these shoppers with campaigns and discounts", w_prod: "Product", w_likes: "Likes", w_vis: "Visitors", w_contacts: "Contacts", w_export: "Export wishlist leads", w_empty: "No wishlist activity yet.",
+    raw_title: "Raw Data Table", search_ph: "Search all columns...", all_events: "All events", csv: "Export CSV", prev: "Previous", next: "Next",
+    page: (p, n, t) => `Page ${p} of ${n} — ${t} records`, no_data: "No matching data.", chart_fail: "Could not load the charts library (Chart.js).",
+    note: cols => `Columns missing from the sheet: ${cols}. The dashboard shows existing columns only. To add them, write their headers in the first row of the tab and add the matching fields in the Google Sheets node in n8n.`,
+    d_mobile: "Mobile", d_desktop: "Desktop", d_tablet: "Tablet", d_unknown: "Unknown", unknown: "Unknown", direct: "Direct",
+    ev: { PageView: "Page View", ViewContent: "View Product", AddToCart: "Add to Cart", Wishlist_Love: "Wishlist Like", InitiateCheckout: "Checkout Started", Purchase: "Purchase" },
+    col: { timestamp: "Time", event_name: "Event", page_url: "Page URL", product_name: "Product", traffic_source: "Traffic Source", user_ip: "IP Address", country_city: "Country & City", device_type: "Device", user_contact: "Contact", user_agent: "User Agent", session_id: "Session ID", value: "Value", currency: "Currency", num_items: "Items" },
+    am: "AM", pm: "PM",
+  },
 };
+let LANG = localStorage.getItem("alora_dash_lang") === "en" ? "en" : "ar";
+const t = (k, ...a) => { const v = I18N[LANG][k]; return typeof v === "function" ? v(...a) : (v ?? k); };
 
-let CURR_LANG = localStorage.getItem("alora_lang") || "ar";
+/* ---------- أيقونات Lucide (SVG مضمّنة، ترخيص ISC) ---------- */
+const IC = {
+  eye: '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  cart: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+  bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  package: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  chart: '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  trend: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  activity: '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/>',
+  device: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  table: '<path d="M12 3v18"/><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/>',
+  chev: '<path d="m6 9 6 6 6-6"/>',
+  reset: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+};
+const icon = n => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ""}</svg>`;
+
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = n => Number(n).toLocaleString("en");
+const DAY = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" });
 const TIME = new Intl.DateTimeFormat("en-GB", { timeZone: TZ, day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false });
-const fmtT = t => { if (!t) return ""; const p = Object.fromEntries(TIME.formatToParts(t).map(x => [x.type, x.value])); return `${p.day}/${p.month}/${p.year} | ${p.hour}:${p.minute}`; };
+const fmtT = ts => { if (!ts) return ""; const p = Object.fromEntries(TIME.formatToParts(ts).map(x => [x.type, x.value])); const h = Number(p.hour) % 24; return `${p.day}-${p.month}-${p.year} | ${String(h % 12 || 12).padStart(2, "0")}:${p.minute} ${h >= 12 ? t("pm") : t("am")}`; };
+/* ألوان الرسوم: Emerald / Indigo / Cyan / Rose + مكملات */
+const PAL = ["#6366f1", "#10b981", "#06b6d4", "#f43f5e", "#f59e0b", "#8b5cf6", "#64748b", "#14b8a6", "#ec4899", "#94a3b8"];
 
-/* Modern Vibrant Palette (Indigo, Emerald, Cyan, Rose, Amber) */
-const PALETTE = ["#4F46E5", "#10B981", "#06B6D4", "#F43F5E", "#F59E0B", "#8B5CF6", "#EC4899", "#3B82F6"];
+let KEY = "", COLS = [], ROWS = [], BASE = [], FILT = [], MISSING = [], page = 1, CH = {}, LOADED = false;
 
-let KEY = "", COLS = [], ROWS = [], BASE = [], FILT = [], page = 1, CH = {};
-
-/* Bilingual Toggle */
-function setLang(lang) {
-  CURR_LANG = lang;
-  localStorage.setItem("alora_lang", lang);
-  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-  document.documentElement.lang = lang;
-  $("#langToggle").textContent = lang === "ar" ? "English 🌐" : "العربية 🌐";
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (I18N[lang][key]) el.textContent = I18N[lang][key];
-  });
-  if (ROWS.length) render();
+/* ---------- تطبيق اللغة والاتجاه ---------- */
+function applyLang() {
+  document.documentElement.lang = LANG; document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr"; document.title = t("title");
+  document.querySelectorAll("[data-i]").forEach(e => e.textContent = t(e.dataset.i));
+  document.querySelectorAll("[data-ph]").forEach(e => e.placeholder = t(e.dataset.ph));
+  document.querySelectorAll("[data-lang-switch] button").forEach(b => b.classList.toggle("on", b.dataset.l === LANG));
+  if (LOADED) { fillFilters(); setNote(); $("#upd").textContent = t("upd") + fmtT(LASTUPD); render(); }
 }
-$("#langToggle").onclick = () => setLang(CURR_LANG === "ar" ? "en" : "ar");
-setLang(CURR_LANG);
+document.querySelectorAll("[data-lang-switch] button").forEach(b => b.onclick = () => { LANG = b.dataset.l; localStorage.setItem("alora_dash_lang", LANG); applyLang(); });
+document.querySelectorAll("[data-ic]").forEach(e => e.innerHTML = icon(e.dataset.ic));
+let LASTUPD = 0;
 
-/* Collapsible Table */
-$("#twToggle").onclick = () => {
-  const content = $("#twContent");
-  const icon = $("#twIcon");
-  content.hidden = !content.hidden;
-  icon.textContent = content.hidden ? "▼" : "▲";
-};
-
-/* Authentication & Data Fetching */
+/* ---------- تسجيل الدخول: الكلمة تُرسل للسكربت ويتحقق منها هناك ---------- */
 $("#lf").addEventListener("submit", e => { e.preventDefault(); KEY = $("#pw").value; load(true); });
 $("#logout").onclick = () => { sessionStorage.removeItem("alora_dash_key"); location.reload(); };
+applyLang();
 if (sessionStorage.getItem("alora_dash_key")) { KEY = sessionStorage.getItem("alora_dash_key"); load(true); }
 
+/* ---------- جلب البيانات (GET) مع JSONP احتياطي ---------- */
 function jsonp(url) {
   return new Promise((res, rej) => {
     const cb = "__alora_" + Date.now(), s = document.createElement("script");
-    const done = () => { clearTimeout(t); delete window[cb]; s.remove(); };
-    const t = setTimeout(() => { done(); rej(new Error("timeout")); }, 40000);
+    const done = () => { clearTimeout(tm); delete window[cb]; s.remove(); };
+    const tm = setTimeout(() => { done(); rej(new Error("timeout")); }, 40000);
     window[cb] = d => { done(); res(d); };
     s.onerror = () => { done(); rej(new Error("network")); };
     s.src = url + "&callback=" + cb; document.head.appendChild(s);
   });
 }
 async function fetchData() {
+  if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(WEB_APP_URL)) throw new Error("SET_URL");
   const url = WEB_APP_URL + (WEB_APP_URL.includes("?") ? "&" : "?") + "key=" + encodeURIComponent(KEY) + "&days=" + $("#range").value;
   try { const r = await fetch(url); return await r.json(); } catch (e) { return await jsonp(url); }
 }
@@ -514,161 +242,159 @@ async function load(first) {
   const b = $("#refresh"), g = $("#lgo"); b.disabled = g.disabled = true; $("#lerr").textContent = "";
   try {
     const d = await fetchData();
-    if (!d.ok) throw new Error(d.error === "unauthorized" ? I18N[CURR_LANG].err_pw : (d.error || "Error"));
+    if (!d.ok) throw new Error(d.error === "unauthorized" ? "BAD_PW" : (d.error || "FAIL"));
     sessionStorage.setItem("alora_dash_key", KEY);
-    prep(d); $("#login").hidden = true; $("#app").hidden = false;
-    $("#upd").textContent = (CURR_LANG === "ar" ? "آخر تحديث: " : "Last updated: ") + fmtT(Date.now());
-    fillFilters(); render();
+    prep(d); LOADED = true; LASTUPD = Date.now(); $("#login").hidden = true; $("#app").hidden = false;
+    $("#upd").textContent = t("upd") + fmtT(LASTUPD);
+    fillFilters(); setNote(); render();
   } catch (err) {
     console.error(err);
-    if (first) {
-      sessionStorage.removeItem("alora_dash_key"); $("#login").hidden = false; $("#app").hidden = true;
-      $("#lerr").textContent = (err.message === "network" || err.message === "timeout") ? I18N[CURR_LANG].err_conn : err.message;
-    } else alert("Error: " + err.message);
+    const m = err.message === "BAD_PW" ? t("bad_pw") : err.message === "SET_URL" ? t("set_url") : (err.message === "network" || err.message === "timeout") ? t("net_err") : (err.message === "FAIL" ? t("fail") : err.message);
+    if (first) { sessionStorage.removeItem("alora_dash_key"); $("#login").hidden = false; $("#app").hidden = true; $("#lerr").textContent = m; }
+    else alert(t("upd_fail") + m);
   } finally { b.disabled = g.disabled = false; }
 }
 $("#refresh").onclick = () => load(false);
 $("#range").onchange = () => load(false);
 
-/* Data Preparation */
+/* ---------- تجهيز الصفوف وإضافة حقول مشتقة (تبدأ بـ _) ---------- */
+const normPhone = v => { let d = String(v ?? "").replace(/[٠-٩]/g, x => "٠١٢٣٤٥٦٧٨٩".indexOf(x)).replace(/\D/g, ""); if (!d) return ""; if (d.length === 12 && d.startsWith("20")) d = "0" + d.slice(2); else if (d.length === 10 && d[0] === "1") d = "0" + d; return d; };
 function prep(d) {
-  COLS = d.columns || [];
+  COLS = d.columns || []; MISSING = d.missing || [];
   ROWS = (d.rows || []).map(a => {
     const o = {}; COLS.forEach((c, i) => o[c] = a[i] ?? "");
-    const t = Date.parse(o.timestamp); o._t = isNaN(t) ? 0 : t;
-    o._day = o._t ? new Date(o._t).toISOString().slice(0, 10) : "";
-    const parts = String(o.country_city || "").trim().split(/\s*[-–—,]\s*/).filter(Boolean);
-    o._city = parts.length ? parts[parts.length - 1] : (CURR_LANG === "ar" ? "غير محدد" : "Unknown");
+    const ts = Date.parse(o.timestamp); o._t = isNaN(ts) ? 0 : ts; o._day = o._t ? DAY.format(o._t) : "";
+    const parts = String(o.country_city || "").trim().split(/\s*[-–—,]\s*/).filter(Boolean); o._city = parts.length ? parts[parts.length - 1] : "";
     const dv = (String(o.device_type || "") + " " + String(o.user_agent || "")).toLowerCase();
-    o._dev = /tablet|ipad/.test(dv) ? (CURR_LANG === "ar" ? "تابلت" : "Tablet") : /mobile|android|iphone/.test(dv) ? (CURR_LANG === "ar" ? "موبايل" : "Mobile") : (CURR_LANG === "ar" ? "ديسكتوب" : "Desktop");
-    o._val = parseFloat(o.value) || 0;
-    o._s = (a.join(" ") + " " + o.user_contact).toLowerCase();
+    o._dev = /tablet|ipad/.test(dv) ? "tablet" : /mobile|android|iphone/.test(dv) ? "mobile" : /desktop|windows|macintosh|linux|x11/.test(dv) ? "desktop" : "unknown";
+    o._phone = normPhone(o.user_contact);
+    o._sid = String(o.session_id || "") || (o.user_ip ? o.user_ip + "|" + o._dev : "");
+    o._s = (a.join(" ") + " " + o._phone).toLowerCase();
     return o;
   }).sort((x, y) => y._t - x._t);
 }
-
+const evL = e => I18N[LANG].ev[e] || e;
+const devL = d => t("d_" + d);
+const cityL = c => c || t("unknown");
+const colL = c => I18N[LANG].col[c] || c;
+function setNote() { $("#note").hidden = !MISSING.length; if (MISSING.length) $("#noteTx").textContent = t("note", MISSING.join(LANG === "ar" ? "، " : ", ")); }
 function fillFilters() {
   const keep = { c: $("#fCity").value, e: $("#fEvent").value };
-  const opt = (arr, all) => `<option value="">${all}</option>` + arr.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
-  $("#fCity").innerHTML = opt([...new Set(ROWS.map(r => r._city))].sort(), I18N[CURR_LANG].all_cities);
-  $("#fEvent").innerHTML = opt([...new Set(ROWS.map(r => r.event_name).filter(Boolean))].sort(), I18N[CURR_LANG].all_events);
+  const opt = (arr, all, lab) => `<option value="">${esc(all)}</option>` + arr.map(v => `<option value="${esc(v)}">${esc(lab ? lab(v) : v)}</option>`).join("");
+  $("#fCity").innerHTML = opt([...new Set(ROWS.map(r => r._city).filter(Boolean))].sort(), t("all_cities"));
+  $("#fEvent").innerHTML = opt([...new Set(ROWS.map(r => r.event_name).filter(Boolean))].sort(), t("all_events"), evL);
   $("#fCity").value = keep.c; $("#fEvent").value = keep.e;
 }
 
+/* ---------- الفلترة: التاريخ والمدينة للكروت والرسوم، والحدث والبحث للجدول ---------- */
 function applyFilters() {
-  const f = $("#fFrom").value, t = $("#fTo").value, c = $("#fCity").value, e = $("#fEvent").value, q = $("#fQ").value.trim().toLowerCase();
-  BASE = ROWS.filter(r => (!f || (r._day && r._day >= f)) && (!t || (r._day && r._day <= t)) && (!c || r._city === c));
+  const f = $("#fFrom").value, to = $("#fTo").value, c = $("#fCity").value, e = $("#fEvent").value, q = $("#fQ").value.trim().toLowerCase();
+  BASE = ROWS.filter(r => (!f || (r._day && r._day >= f)) && (!to || (r._day && r._day <= to)) && (!c || r._city === c));
   FILT = BASE.filter(r => (!e || r.event_name === e) && (!q || r._s.includes(q)));
 }
-function render() { applyFilters(); cards(); charts(); table(); }
+function render() { applyFilters(); cards(); wishlist(); charts(); if ($("#raw").open) table(); }
 ["fFrom", "fTo", "fCity"].forEach(id => $("#" + id).onchange = () => { page = 1; render(); });
-$("#fEvent").onchange = () => { page = 1; applyFilters(); table(); };
+$("#fEvent").onchange = () => { page = 1; applyFilters(); if ($("#raw").open) table(); };
 let qt; $("#fQ").oninput = () => { clearTimeout(qt); qt = setTimeout(() => { page = 1; applyFilters(); table(); }, 200); };
 $("#perPage").onchange = () => { page = 1; table(); };
+$("#raw").addEventListener("toggle", () => { if ($("#raw").open) { applyFilters(); table(); } });
 $("#fReset").onclick = () => { ["fFrom", "fTo", "fCity", "fEvent", "fQ"].forEach(id => $("#" + id).value = ""); page = 1; render(); };
 
-/* Render Executive Cards */
+/* ---------- الحسابات ---------- */
 const tally = (arr, key) => { const m = new Map(); arr.forEach(r => { const k = typeof key === "function" ? key(r) : r[key]; if (k !== "" && k != null) m.set(k, (m.get(k) || 0) + 1); }); return [...m.entries()].sort((a, b) => b[1] - a[1]); };
 function cards() {
-  const L = BASE;
-  const pv = L.filter(r => r.event_name === "PageView");
+  const L = BASE, pv = L.filter(r => r.event_name === "PageView"), hasSid = L.some(r => r.session_id);
   const visits = pv.length || L.length;
-  const sess = new Set(L.map(r => r.session_id || r.user_ip).filter(Boolean)).size;
-  const purchases = L.filter(r => r.event_name === "Purchase");
-  const totalRev = L.reduce((acc, r) => acc + r._val, 0);
-  const ic = L.filter(r => r.event_name === "InitiateCheckout").length;
-  const phones = new Set(L.map(r => r.user_contact).filter(Boolean)).size;
-  const tc = tally(L.filter(r => r._city !== "غير محدد" && r._city !== "Unknown"), "_city")[0];
-  const tp = tally(L.filter(r => r.product_name && !String(r.product_name).includes(" | ")), "product_name")[0];
-
-  const K = (title, val, sub, icon, color, bg, isSm) => `
-    <div class="kpi" style="--kpi-color: ${color}; --kpi-bg: ${bg};">
-      <div class="kpi-head">
-        <span class="kpi-title">${title}</span>
-        <div class="kpi-icon">${icon}</div>
-      </div>
-      <b class="${isSm ? 'text-sm' : ''}">${esc(val)}</b>
-      ${sub ? `<small>${esc(sub)}</small>` : ''}
-    </div>
-  `;
-
-  const lang = I18N[CURR_LANG];
+  const sess = new Set(L.map(r => r._sid).filter(Boolean)).size;
+  const ic = L.filter(r => r.event_name === "InitiateCheckout"), icU = new Set(ic.map((r, i) => r._sid || ("r" + i))).size;
+  const pur = L.filter(r => r.event_name === "Purchase").length;
+  const phones = new Set(L.map(r => r._phone).filter(Boolean)).size;
+  const wl = L.filter(r => r.event_name === "Wishlist_Love");
+  const wlS = new Set(wl.map(r => r._sid).filter(Boolean)).size, wlP = new Set(wl.map(r => r._phone).filter(Boolean)).size;
+  const tc = tally(L.filter(r => r._city), "_city")[0];
+  const views = L.filter(r => r.event_name === "ViewContent" && r.product_name);
+  const tp = tally(views.length ? views : L.filter(r => r.product_name && !String(r.product_name).includes(" | ")), "product_name")[0];
+  const K = (c, i, l, v, s, tx) => `<div class="kpi"><div class="ic ${c}">${icon(i)}</div><div class="tx"><span>${esc(l)}</span><b class="${tx ? "t" : ""}">${esc(v)}</b>${s ? `<small>${esc(s)}</small>` : ""}</div></div>`;
   $("#cards").innerHTML =
-    K(lang.kpi_visits, visits.toLocaleString("en"), pv.length ? "PageView Events" : "All Traffic", "👁️", "#4F46E5", "#EEF2FF") +
-    K(lang.kpi_unique, sess.toLocaleString("en"), "Unique Sessions", "👥", "#06B6D4", "#CFFAFE") +
-    K(lang.kpi_revenue, totalRev > 0 ? `${totalRev.toLocaleString("en")} EGP` : "—", `${purchases.length} Purchase Events`, "💰", "#10B981", "#ECFDF5") +
-    K(lang.kpi_checkout, ic.toLocaleString("en"), "Initiate Checkout", "🛒", "#F59E0B", "#FEF3C7") +
-    K(lang.kpi_purchases, purchases.length.toLocaleString("en"), "Completed Orders", "🎉", "#10B981", "#ECFDF5") +
-    K(lang.kpi_contacts, phones.toLocaleString("en"), "Captured Leads", "📞", "#EC4899", "#FCE7F3") +
-    K(lang.kpi_top_city, tc ? tc[0] : "—", tc ? `${tc[1]} events` : "", "📍", "#8B5CF6", "#F3E8FF", true) +
-    K(lang.kpi_top_prod, tp ? tp[0] : "—", tp ? `${tp[1]} views` : "", "💎", "#F43F5E", "#FFE4E6", true);
+    K("c-em", "eye", t("k_visits"), num(visits), pv.length ? "" : t("s_nopv")) +
+    K("c-in", "users", t("k_unique"), num(sess), hasSid ? "" : t("s_est")) +
+    K("c-cy", "cart", t("k_checkout"), num(icU)) +
+    K("c-em", "bag", t("k_purchase"), num(pur)) +
+    K("c-am", "phone", t("k_phones"), num(phones)) +
+    K("c-ro", "heart", t("k_wish"), num(wl.length), t("s_wish", num(wlS), num(wlP))) +
+    K("c-vi", "pin", t("k_city"), tc ? tc[0] : "—", tc ? t("s_events", num(tc[1])) : "", 1) +
+    K("c-in", "package", t("k_prod"), tp ? tp[0] : "—", tp ? t("s_views", num(tp[1])) : "", 1);
 }
 
-/* Render Modern Charts */
+/* ---------- المنتجات الأكثر إعجاباً (Wishlist_Love) ---------- */
+let WL = [];
+function wishlist() {
+  const m = new Map();
+  BASE.filter(r => r.event_name === "Wishlist_Love" && r.product_name).forEach(r => {
+    const o = m.get(r.product_name) || { name: r.product_name, likes: 0, s: new Set(), p: new Set() };
+    o.likes++; if (r._sid) o.s.add(r._sid); if (r._phone) o.p.add(r._phone); m.set(r.product_name, o);
+  });
+  WL = [...m.values()].sort((a, b) => b.likes - a.likes);
+  $("#wlHead").innerHTML = `<tr><th class="rank">#</th><th>${esc(t("w_prod"))}</th><th class="num">${esc(t("w_likes"))}</th><th class="num">${esc(t("w_vis"))}</th><th class="num">${esc(t("w_contacts"))}</th></tr>`;
+  $("#wlBody").innerHTML = WL.length ? WL.slice(0, 10).map((o, i) => `<tr><td class="rank">${i + 1}</td><td title="${esc(o.name)}">${esc(o.name)}</td><td class="num">${num(o.likes)}</td><td class="num">${num(o.s.size)}</td><td class="num">${num(o.p.size)}</td></tr>`).join("") : `<tr><td colspan="5" class="empty">${esc(t("w_empty"))}</td></tr>`;
+}
+$("#wlExport").onclick = () => {
+  const head = LANG === "ar" ? ["المنتج", "الإعجابات", "الزوار", "الأرقام"] : ["Product", "Likes", "Visitors", "Contacts"];
+  download("alora-wishlist-leads-" + DAY.format(Date.now()) + ".csv", [head].concat(WL.map(o => [o.name, o.likes, o.s.size, [...o.p].join(" ")])));
+};
+
+/* ---------- الرسوم البيانية (تُعاد بناؤها عند تغيير اللغة) ---------- */
 function mk(id, type, labels, datasets, opt) {
   if (CH[id]) CH[id].destroy();
-  if (typeof Chart === "undefined") return;
-  CH[id] = new Chart($("#" + id), {
-    type,
-    data: { labels, datasets },
-    options: Object.assign({
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: type === "doughnut" || datasets.length > 1, position: "bottom", labels: { boxWidth: 12, font: { family: CURR_LANG === "ar" ? "Readex Pro" : "Plus Jakarta Sans" } } }
-      }
-    }, opt || {})
-  });
+  if (typeof Chart === "undefined") { $("#" + id).parentElement.innerHTML = `<div class='empty'>${esc(t("chart_fail"))}</div>`; return; }
+  const rtl = LANG === "ar", base = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: type === "doughnut" || datasets.length > 1, position: "bottom", rtl, textDirection: rtl ? "rtl" : "ltr" }, tooltip: { rtl, textDirection: rtl ? "rtl" : "ltr" } } };
+  CH[id] = new Chart($("#" + id), { type, data: { labels, datasets }, options: Object.assign(base, opt || {}) });
 }
-
 function charts() {
   const L = BASE;
-  // 1) Trend Chart
   const vis = new Map(), all = new Map(), days = L.map(r => r._day).filter(Boolean).sort();
   L.forEach(r => { if (!r._day) return; all.set(r._day, (all.get(r._day) || 0) + 1); if (r.event_name === "PageView") vis.set(r._day, (vis.get(r._day) || 0) + 1); });
   const lab = []; if (days.length) { for (let d = new Date(days[0] + "T00:00:00Z"), e = new Date(days[days.length - 1] + "T00:00:00Z"), n = 0; d <= e && n < 400; d.setUTCDate(d.getUTCDate() + 1), n++) lab.push(d.toISOString().slice(0, 10)); }
   mk("cTrend", "line", lab, [
-    { label: CURR_LANG === "ar" ? "الزيارات (PageView)" : "Visits (PageView)", data: lab.map(d => vis.get(d) || 0), borderColor: "#4F46E5", backgroundColor: "rgba(79, 70, 229, 0.1)", fill: true, tension: 0.3 },
-    { label: CURR_LANG === "ar" ? "كل الأحداث" : "All Events", data: lab.map(d => all.get(d) || 0), borderColor: "#06B6D4", backgroundColor: "transparent", tension: 0.3 }
-  ]);
-
-  // 2) Event Types Donut
+    { label: t("ds_visits"), data: lab.map(d => vis.get(d) || 0), borderColor: PAL[1], backgroundColor: "rgba(16,185,129,.12)", fill: true, tension: .35, pointRadius: 2 },
+    { label: t("ds_all"), data: lab.map(d => all.get(d) || 0), borderColor: PAL[0], backgroundColor: PAL[0], tension: .35, pointRadius: 2 }]);
   const ev = tally(L, "event_name");
-  mk("cEvents", "doughnut", ev.map(x => x[0]), [{ data: ev.map(x => x[1]), backgroundColor: PALETTE }]);
-
-  // 3) Devices
-  const dv = tally(L, "_dev");
-  mk("cDev", "doughnut", dv.map(x => x[0]), [{ data: dv.map(x => x[1]), backgroundColor: ["#10B981", "#4F46E5", "#F59E0B"] }]);
-
-  // 4) Top Cities
-  const ct = tally(L, "_city").slice(0, 8);
-  mk("cCity", "bar", ct.map(x => x[0]), [{ label: CURR_LANG === "ar" ? "عدد الأحداث" : "Events", data: ct.map(x => x[1]), backgroundColor: "#4F46E5", borderRadius: 8 }], { indexAxis: "y" });
-
-  // 5) Top Products
-  const pr = tally(L.filter(r => r.product_name), "product_name").slice(0, 10);
-  mk("cProd", "bar", pr.map(x => x[0]), [{ label: CURR_LANG === "ar" ? "التفاعلات" : "Interactions", data: pr.map(x => x[1]), backgroundColor: "#10B981", borderRadius: 8 }], { indexAxis: "y" });
+  mk("cEvents", "doughnut", ev.map(x => evL(x[0])), [{ data: ev.map(x => x[1]), backgroundColor: PAL, borderWidth: 2, borderColor: "#fff" }], { cutout: "62%", onClick: (e, els) => { if (els.length) { $("#fEvent").value = ev[els[0].index][0]; page = 1; $("#raw").open = true; applyFilters(); table(); $("#raw").scrollIntoView({ behavior: "smooth" }); } } });
+  const dv = tally(L, "_dev"); mk("cDev", "doughnut", dv.map(x => devL(x[0])), [{ data: dv.map(x => x[1]), backgroundColor: [PAL[1], PAL[0], PAL[2], PAL[6]], borderWidth: 2, borderColor: "#fff" }], { cutout: "62%" });
+  const ct = tally(L.filter(r => r._city), "_city").slice(0, 10); mk("cCity", "bar", ct.map(x => x[0]), [{ label: t("ds_events"), data: ct.map(x => x[1]), backgroundColor: PAL[2], borderRadius: 6 }], { indexAxis: "y" });
+  const pr = tally(L.filter(r => ["ViewContent", "AddToCart", "Wishlist_Love"].includes(r.event_name) && r.product_name), "product_name").slice(0, 10);
+  mk("cProd", "bar", pr.map(x => x[0]), [{ label: t("ds_inter"), data: pr.map(x => x[1]), backgroundColor: PAL[0], borderRadius: 6 }], { indexAxis: "y" });
 }
 
-/* Table */
-function cell(r, c) { if (c === "timestamp") return fmtT(r._t) || r[c]; return r[c]; }
+/* ---------- الجدول الخام الشامل (كل الأعمدة) + الصفحات ---------- */
+function cell(r, c) {
+  const v = r[c];
+  if (c === "timestamp") return fmtT(r._t) || v;
+  if (c === "user_contact") return r._phone || v;
+  if (c === "event_name") return evL(v);
+  if (c === "device_type") return devL(r._dev);
+  if (c === "traffic_source" && String(v).toLowerCase() === "direct") return t("direct");
+  return v;
+}
 function table() {
   const pp = Number($("#perPage").value) || 25, pages = Math.max(1, Math.ceil(FILT.length / pp)); page = Math.min(page, pages);
-  $("#thead").innerHTML = "<tr><th>#</th>" + COLS.map(c => `<th>${esc(c)}</th>`).join("") + "</tr>";
+  $("#thead").innerHTML = "<tr><th>#</th>" + COLS.map(c => `<th>${esc(colL(c))}</th>`).join("") + "</tr>";
   const slice = FILT.slice((page - 1) * pp, page * pp);
-  $("#tbody").innerHTML = slice.length ? slice.map((r, i) => `<tr><td>${(page - 1) * pp + i + 1}</td>` + COLS.map(c => `<td title="${esc(r[c])}">${esc(cell(r, c))}</td>`).join("") + "</tr>").join("") : `<tr><td colspan="${COLS.length + 1}" class="empty">No records found.</td></tr>`;
-  $("#pinfo").textContent = `${CURR_LANG === 'ar' ? 'صفحة' : 'Page'} ${page} / ${pages} — ${FILT.length.toLocaleString("en")} ${CURR_LANG === 'ar' ? 'سجل' : 'records'}`;
+  $("#tbody").innerHTML = slice.length ? slice.map((r, i) => `<tr><td>${(page - 1) * pp + i + 1}</td>` + COLS.map(c => `<td title="${esc(r[c])}">${esc(cell(r, c))}</td>`).join("") + "</tr>").join("") : `<tr><td colspan="${COLS.length + 1}" class="empty">${esc(t("no_data"))}</td></tr>`;
+  $("#pinfo").textContent = t("page", page, pages, num(FILT.length));
   $("#prev").disabled = page <= 1; $("#next").disabled = page >= pages;
 }
 $("#prev").onclick = () => { page--; table(); };
 $("#next").onclick = () => { page++; table(); };
 
-/* CSV Export */
-$("#csv").onclick = () => {
+/* ---------- تصدير CSV (حماية من حقن المعادلات) ---------- */
+function download(name, rows) {
   const q = v => { let s = String(v ?? ""); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""').replace(/\r?\n/g, " ") + '"'; };
-  const csv = "\ufeff" + [COLS.map(q).join(",")].concat(FILT.map(r => COLS.map(c => q(r[c])).join(","))).join("\r\n");
+  const csv = "\ufeff" + rows.map(r => r.map(q).join(",")).join("\r\n");
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-  a.download = "alora-analytics-" + new Date().toISOString().slice(0, 10) + ".csv"; document.body.appendChild(a); a.click(); a.remove();
-};
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+$("#csv").onclick = () => download("alora-analytics-" + DAY.format(Date.now()) + ".csv", [COLS].concat(FILT.map(r => COLS.map(c => r[c]))));
 </script>
 </body>
 </html>
